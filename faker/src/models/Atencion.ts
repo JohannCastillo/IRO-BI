@@ -18,7 +18,6 @@ export class Atencion {
     })
     const atendida = moment(llegada).add(randomMinutes, 'minutes').toDate()
 
-
     this.IdEstado = faker.helpers.arrayElement([1, 2, 3, 4, 5])
     this.FechaHoraLlegada = llegada.toISOString()
     this.FechaHoraAtendida = atendida.toISOString()
