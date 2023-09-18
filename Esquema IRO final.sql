@@ -1,11 +1,11 @@
-DROP DATABASE IF EXISTS IRO;
+use master
+go
+DROP DATABASE IF EXISTS IRO2;
 GO
-CREATE DATABASE IRO;
+CREATE DATABASE IRO2;
 GO
-USE IRO;
+USE IRO2;
 GO
-
-
 
 CREATE TABLE ASISTENCIA
 ( 
@@ -185,14 +185,43 @@ CREATE TABLE PACIENTE
 	IdDistrito           smallint  NOT NULL ,
 	FechaDeNacimiento    datetime  NOT NULL ,
 	NombresYApelidos     varchar(50)  NOT NULL ,
+	Sexo 			   	 char(1)  NOT NULL ,
+	Celular              char(9)  NULL ,
+	Correo			     varchar(50)  NULL ,
+	Domicilio			 varchar(50)  NULL ,
+	TipoSangre			 varchar(3)  NULL ,
+	EstadoCivil			 varchar(20)  NULL ,
 	DNI                  char(8)  NOT NULL 
 )
 go
 
-
-
 ALTER TABLE PACIENTE
 	ADD CONSTRAINT XPKPACIENTE PRIMARY KEY  CLUSTERED (IdPaciente ASC)
+go
+
+
+
+CREATE TABLE CONTACTO_EMERGENCIA(
+	idContactoEmergencia int identity(1,1) not null,
+	idPaciente bigint not null,
+	Nombre varchar(50) not null,
+	Apellidos varchar(50) not null,
+	Celular char(9) not null,
+	Correo varchar(50) null,
+	Relacion varchar(50) not null
+)
+GO
+
+ALTER TABLE CONTACTO_EMERGENCIA
+	ADD CONSTRAINT XPKCONTACTO_EMERGENCIA PRIMARY KEY  CLUSTERED (idContactoEmergencia ASC)
+GO
+
+
+
+ALTER TABLE CONTACTO_EMERGENCIA
+	ADD CONSTRAINT R_100 FOREIGN KEY (idPaciente) REFERENCES PACIENTE(IdPaciente)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
 go
 
 
@@ -415,3 +444,87 @@ ALTER TABLE SERVICIO
 		ON DELETE NO ACTION
 		ON UPDATE NO ACTION
 go
+
+
+
+CREATE TABLE ENFERMEDAD
+( 
+	IdEnfermedad	int identity(1,1)  NOT NULL ,
+	Nombre			varchar(50)  NOT NULL ,
+	Descripcion		varchar(100)  NOT NULL
+)
+GO
+
+ALTER TABLE ENFERMEDAD
+	ADD CONSTRAINT XPKENFERMEDAD PRIMARY KEY  CLUSTERED (IdEnfermedad ASC)
+go
+
+CREATE TABLE ENFERMEDAD_DIAGNOSTICADA(
+	IdEnfermedadDiagnosticada int identity(1,1) not null,
+	IdEnfermedad int not null,
+	IdPaciente bigint not null,
+	IdDoctor int not null,
+	FechaDiagnostico datetime not null
+)
+go
+
+ALTER TABLE ENFERMEDAD_DIAGNOSTICADA
+	ADD CONSTRAINT XPKENFERMEDAD_DIAGNOSTICADA PRIMARY KEY  CLUSTERED (IdEnfermedadDiagnosticada ASC)
+go
+
+ALTER TABLE ENFERMEDAD_DIAGNOSTICADA
+	ADD CONSTRAINT R_101 FOREIGN KEY (IdEnfermedad) REFERENCES ENFERMEDAD(IdEnfermedad)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE ENFERMEDAD_DIAGNOSTICADA
+	ADD CONSTRAINT R_102 FOREIGN KEY (IdPaciente) REFERENCES PACIENTE(IdPaciente)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE ENFERMEDAD_DIAGNOSTICADA
+	ADD CONSTRAINT R_103 FOREIGN KEY (IdDoctor) REFERENCES DOCTOR(IdDoctor)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+CREATE TABLE DIAGNOSTICO(
+	IdAtencion int not null,
+	Observaciones varchar(100) not null,
+
+	LejosODEsf float null,
+	LejosODCil float null,
+	LejosODEje float null,
+	LejosOIEsf float null,
+	LejosOICil float null,
+	LejosOIEje float null,
+
+	CercaODEsf float null,
+	CercaODCil float null,
+	CercaODEje float null,
+	CercaOIEsf float null,
+	CercaOICil float null,
+
+	AgudezaVisual float null,
+	Tonometria float null,
+	Refraccion float null,
+	Paquimetria float null,
+	OCT float null,
+
+	IdEnfermedadDiagnosticada int not null,
+)
+go
+
+ALTER TABLE DIAGNOSTICO
+	ADD CONSTRAINT R_104 FOREIGN KEY (IdAtencion) REFERENCES ATENCION(IdAtencion)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+go
+
+ALTER TABLE DIAGNOSTICO
+	ADD CONSTRAINT R_105 FOREIGN KEY (IdEnfermedadDiagnosticada) REFERENCES ENFERMEDAD_DIAGNOSTICADA(IdEnfermedadDiagnosticada)
+		ON DELETE NO ACTION
+		ON UPDATE NO ACTION
+
