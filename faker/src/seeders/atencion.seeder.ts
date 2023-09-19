@@ -16,7 +16,7 @@ export class AtencionSeeder {
     exportTo('sql', sentence, 'atenciones')
   }
 
-  static seedCsv({ quantity = 20 }: SeedParams = {}) {
+  static seedCsv({ quantity = 1000000 }: SeedParams = {}) {
     let sentence = ''
     for (let i = 1; i <= quantity; i++) {
       const atencion = new Atencion(i)

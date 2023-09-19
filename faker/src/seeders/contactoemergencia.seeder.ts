@@ -1,34 +1,31 @@
 import { formatCSV } from '../helpers/cvs'
 import { exportTo } from '../helpers/file'
 import { formatSqlOne } from '../helpers/sql'
-import { Paciente } from '../models/Paciente'
+import { ContactoEmergencia } from '../models/ContactoEmergencia'
 
 interface SeedParams {
   quantity?: number | undefined
 }
-export class PacienteSeeder {
+export class ContactoEmergenciaSeeder {
 
 static seed({ quantity = 100 }: SeedParams = {}) {
   let sentence = '';
   for (let i = 1; i <= quantity; i++) {
-    const paciente = new Paciente(i);
-    const sql = formatSqlOne('PACIENTE', paciente);
+    const contacto = new ContactoEmergencia(i);
+    const sql = formatSqlOne('CONTACTO_EMERGENCIA', contacto);
     sentence += sql + '\n';
   }
-  exportTo('sql', sentence, 'pacientes');
+  exportTo('sql', sentence, 'ContactoEmergencia');
 }
 
-  static seedCsv({ quantity = 50000 }: SeedParams = {}) {
+  static seedCsv({ quantity = 40000 }: SeedParams = {}) {
     let sentence = ''
     for (let i = 1; i <= quantity; i++) {
-      const paciente = new Paciente(i)
-      const { csv, header } = formatCSV(paciente)
+      const contacto = new ContactoEmergencia(i)
+      const { csv, header } = formatCSV(contacto)
       if (i === 1) sentence += header + '\n'
       sentence += csv + '\n'
     }
-    //Por cada paciente crea historia aquí 
-    
-
-    exportTo('csv', sentence, 'pacientes')
+    exportTo('csv', sentence, 'ContactosEmergencia')
   }
 }

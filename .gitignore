@@ -1,5 +1,6 @@
 *.sql
 *.csv
+*.xlsx
 faker/node_modules
 faker/data/sql/*
 faker/data/json/*
