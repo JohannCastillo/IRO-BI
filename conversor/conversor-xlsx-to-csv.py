@@ -7,6 +7,9 @@ filePath = '../Ubigeos/Provincias.xlsx'
 
 output = os.path.join(os.getcwd(), 'conversor','data')
 
+if not os.path.exists(output):
+    os.makedirs(output)
+
 xls = pd.ExcelFile(filePath)
 
 for sheet_name in xls.sheet_names:
