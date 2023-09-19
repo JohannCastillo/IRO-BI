@@ -2,6 +2,7 @@ import moment from 'moment'
 import { faker } from '@faker-js/faker'
 
 export class Atencion {
+  IdAtencion: number
   IdEstado: number
   FechaHoraLlegada: string
   FechaHoraAtendida: string
@@ -10,7 +11,8 @@ export class Atencion {
   IdHistoria: number
   IdDoctor: number
 
-  constructor() {
+  constructor(idAtencion: number) {
+    this.IdAtencion = idAtencion
     const llegada = faker.date.recent()
     const randomMinutes = faker.number.int({
       min: 5,

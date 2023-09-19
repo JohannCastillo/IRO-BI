@@ -8,24 +8,24 @@ interface SeedParams {
 export class AtencionSeeder {
   static seed({ quantity = 100 }: SeedParams = {}) {
     let sentence = ''
-    Array.from({ length: quantity }, () => {
-      const atencion = new Atencion()
-
+    for (let i = 1; i <= quantity; i++) {
+      const atencion = new Atencion(i)
       const sql = formatSqlOne('ATENCION', atencion)
       sentence += sql + '\n'
-      return atencion
-    })
+    }
     exportTo('sql', sentence, 'atenciones')
   }
 
   static seedCsv({ quantity = 1000000 }: SeedParams = {}) {
     let sentence = ''
-    Array.from({ length: quantity }, () => {
-      const atencion = new Atencion()
+    for (let i = 1; i <= quantity; i++) {
+      const atencion = new Atencion(i)
       const { csv, header } = formatCSV(atencion)
-      if (sentence === '') sentence += header + '\n'
+      if (i === 1) {
+        sentence += header + '\n'
+      }
       sentence += csv + '\n'
-    })
+    }
     exportTo('csv', sentence, 'atenciones')
   }
 }
