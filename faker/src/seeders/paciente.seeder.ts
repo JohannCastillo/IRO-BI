@@ -7,26 +7,28 @@ interface SeedParams {
   quantity?: number | undefined
 }
 export class PacienteSeeder {
-  static seed({ quantity = 100 }: SeedParams = {}) {
-    let sentence = ''
-    Array.from({ length: quantity }, () => {
-      const paciente = new Paciente()
 
-      const sql = formatSqlOne('PACIENTE', paciente)
-      sentence += sql + '\n'
-      return paciente
-    })
-    exportTo('sql', sentence, 'pacientes')
+static seed({ quantity = 100 }: SeedParams = {}) {
+  let sentence = '';
+  for (let i = 1; i <= quantity; i++) {
+    const paciente = new Paciente(i);
+    const sql = formatSqlOne('PACIENTE', paciente);
+    sentence += sql + '\n';
   }
+  exportTo('sql', sentence, 'pacientes');
+}
 
-  static seedCsv({ quantity = 100 }: SeedParams = {}) {
+  static seedCsv({ quantity = 1000 }: SeedParams = {}) {
     let sentence = ''
-    Array.from({ length: quantity }, () => {
-      const paciente = new Paciente()
+    for (let i = 1; i <= quantity; i++) {
+      const paciente = new Paciente(i)
       const { csv, header } = formatCSV(paciente)
-      if (sentence === '') sentence += header + '\n'
+      if (i === 1) sentence += header + '\n'
       sentence += csv + '\n'
-    })
+    }
+    //Por cada paciente crea historia aquí 
+    
+
     exportTo('csv', sentence, 'pacientes')
   }
 }

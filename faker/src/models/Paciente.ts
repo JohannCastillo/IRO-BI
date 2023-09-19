@@ -1,7 +1,9 @@
 
 import { faker } from '@faker-js/faker'
+import { now } from 'moment'
 
 export class Paciente {
+    IdPaciente: number
     DNI: string
     IdTipoPaciente: number
     IdDistrito: number
@@ -16,11 +18,12 @@ export class Paciente {
     EstadoCivil: string
     IdContactoEmergencia:number
 
-    constructor() {
+    constructor(IdPaciente: number) {
+        this.IdPaciente = IdPaciente
         this.DNI = faker.string.numeric(8).toString()
         this.IdTipoPaciente = faker.number.int({ min: 1, max: 4 })
         this.IdDistrito = faker.number.int({ min: 1, max: 5 })
-        this.FechaDeNacimiento = faker.date.birthdate()
+        this.FechaDeNacimiento = faker.date.past({years: 80, refDate: now()})
         this.Nombre = faker.person.fullName()
         this.Sexo = faker.helpers.arrayElement(['M', 'F'])
         this.Celular = faker.phone.number('##########')
