@@ -11,9 +11,20 @@ export class Atencion {
   IdHistoria: number
   IdDoctor: number
 
-  constructor(idAtencion: number) {
+  constructor(
+    idAtencion: number,
+    idHistoria: number = 0,
+    fechaAperturaHistoria: string = ''
+  ) {
     this.IdAtencion = idAtencion
-    const llegada = faker.date.recent()
+    let llegada = new Date()
+    if (fechaAperturaHistoria) {
+      llegada = faker.date.between({
+        from: moment(fechaAperturaHistoria).toDate(),
+        to: moment().toDate()
+      })
+    }
+    llegada = faker.date.past({ years: 7 })
     const randomMinutes = faker.number.int({
       min: 5,
       max: 60
@@ -25,7 +36,7 @@ export class Atencion {
     this.FechaHoraAtendida = atendida.toISOString()
     this.IdTipoAtencion = faker.helpers.arrayElement([1, 2, 3])
     this.IdServicio = faker.helpers.arrayElement([1, 2, 3, 4, 5, 6, 7])
-    this.IdHistoria = faker.number.int({ min: 1, max: 50000 })
+    this.IdHistoria = idHistoria ?? faker.number.int({ min: 1, max: 50000 })
     this.IdDoctor = faker.number.int({ min: 1, max: 10000 })
   }
 }
