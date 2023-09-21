@@ -1,13 +1,13 @@
-import { PacienteSeeder } from './src/seeders/paciente.seeder'
-import { ContactoEmergenciaSeeder } from './src/seeders/contactoemergencia.seeder'
+// import { PacienteSeeder } from './src/seeders/paciente.seeder'
+// import { ContactoEmergenciaSeeder } from './src/seeders/contactoemergencia.seeder'
 import { AtencionSeeder } from "./src/seeders/atencion.seeder"
-import { CitaSeeder } from "./src/seeders/cita.seeder"
+// import { CitaSeeder } from "./src/seeders/cita.seeder"
 
 function main() {
-  PacienteSeeder.seed()
-  ContactoEmergenciaSeeder.seed()
+  // PacienteSeeder.seed()
+  // ContactoEmergenciaSeeder.seed()
   AtencionSeeder.seed()
-  CitaSeeder.seed()
+  // CitaSeeder.seed()
 }
 
 main()
