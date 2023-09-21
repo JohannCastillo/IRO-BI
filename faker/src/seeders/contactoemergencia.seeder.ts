@@ -8,7 +8,7 @@ interface SeedParams {
 }
 export class ContactoEmergenciaSeeder {
 
-static seed({ quantity = 10 }: SeedParams = {}) {
+static seed({ quantity = 40000 }: SeedParams = {}) {
   let sentence = '';
   for (let i = 1; i <= quantity; i++) {
     const contacto = new ContactoEmergencia();
