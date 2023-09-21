@@ -6,7 +6,7 @@ import { Atencion } from '../models/Atencion'
 export class AtencionSeeder {
   static seed() {
     let sentence = ''
-    Array.from({ length: 1000000 }, () => {
+    Array.from({ length: 10 }, () => {
       const atencion = new Atencion()
 
       const sql = formatSqlOne('ATENCION', atencion)

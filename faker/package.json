@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@faker-js/faker": "^8.0.2"
+    "@faker-js/faker": "^8.0.2",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "ts-node": "^10.9.1",
