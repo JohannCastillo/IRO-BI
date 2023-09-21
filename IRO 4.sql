@@ -328,7 +328,7 @@ go
 CREATE TABLE DISTRITO
 ( 
 	IdDistrito           int IDENTITY ( 1,1 ) ,
-	Distrito             varchar(30)  NOT NULL ,
+	Distrito             varchar(36)  NOT NULL ,
 	IdProvincia          int  NULL 
 )
 go
