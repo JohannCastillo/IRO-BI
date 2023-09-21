@@ -15,6 +15,6 @@ export class ContactoEmergencia {
         this.Apellidos = faker.person.lastName()
         this.Celular = faker.phone.number('9########')
         this.Correo = faker.internet.email()
-        this.Relacion = faker.lorem.paragraph(2)
+        this.Relacion = faker.helpers.arrayElement(['Familiar','Cónyugue', 'Pariente lejano', 'Vecino de confianza','Endermero personal','Amigo','Trabajo','Otro'])  
     }
 }

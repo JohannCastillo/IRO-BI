@@ -2,7 +2,7 @@ import os
 import pandas as pd
 
 #Ruta del archivo a convertir 
-filePath = 'D:\\UNT\\CICLO VIII\\Inteligencia de Negocios\\Proyecto IRO\\IRO-BI\\conversor\\Datos.xlsx'
+filePath = 'D:\\UNT\\CICLO VIII\\Inteligencia de Negocios\\Proyecto IRO\\IRO-BI\\conversor\\Departamentos.xlsx'
 
 
 output = os.path.join(os.getcwd(), 'conversor','data')
