@@ -8,10 +8,10 @@ interface SeedParams {
 }
 export class ContactoEmergenciaSeeder {
 
-static seed({ quantity = 100 }: SeedParams = {}) {
+static seed({ quantity = 10 }: SeedParams = {}) {
   let sentence = '';
   for (let i = 1; i <= quantity; i++) {
-    const contacto = new ContactoEmergencia(i);
+    const contacto = new ContactoEmergencia();
     const sql = formatSqlOne('CONTACTO_EMERGENCIA', contacto);
     sentence += sql + '\n';
   }

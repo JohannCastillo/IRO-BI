@@ -2,14 +2,14 @@
 import { faker } from '@faker-js/faker'
 
 export class ContactoEmergencia {
-    IdContactoEmergencia: number
+    IdContactoEmergencia?: number
     Nombre: string
     Apellidos: string
     Celular: string
     Correo: string
     Relacion: string
 
-    constructor(IdContactoEmergencia: number) {
+    constructor(IdContactoEmergencia?: number) {
         this.IdContactoEmergencia = IdContactoEmergencia
         this.Nombre = faker.person.firstName()
         this.Apellidos = faker.person.lastName()
