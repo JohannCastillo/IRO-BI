@@ -28,7 +28,7 @@ export class Paciente {
         this.Sexo = faker.helpers.arrayElement(['M', 'F'])
         this.Celular = faker.phone.number('9########')
         this.Correo = faker.internet.email()
-        this.Observaciones = faker.lorem.paragraph(2)
+        this.Observaciones = faker.lorem.sentence({min:10 , max: 20})
         this.Domicilio = faker.location.streetAddress()
         this.TipoSangre = faker.helpers.arrayElement(['A+','A-', 'B+','B-', 'AB+', 'AB-', 'O+', 'O-'])
         this.EstadoCivil = faker.helpers.arrayElement(['Soltero', 'Casado', 'Divorciado', 'Viudo'])
