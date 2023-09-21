@@ -1,29 +1,31 @@
-import { addIdToObjects } from '../helpers/array'
+import { formatCSV } from '../helpers/cvs'
 import { exportTo } from '../helpers/file'
-import { formatSql, formatSqlOne } from '../helpers/sql'
+import { formatSqlOne } from '../helpers/sql'
 import { Atencion } from '../models/Atencion'
-
+interface SeedParams {
+  quantity?: number | undefined
+}
 export class AtencionSeeder {
-  static seed() {
+  static seed({ quantity = 100 }: SeedParams = {}) {
     let sentence = ''
-    Array.from({ length: 10 }, () => {
-      const atencion = new Atencion()
-
+    for (let i = 1; i <= quantity; i++) {
+      const atencion = new Atencion(i)
       const sql = formatSqlOne('ATENCION', atencion)
       sentence += sql + '\n'
-      return atencion
-    })
+    }
     exportTo('sql', sentence, 'atenciones')
   }
 
-  static seedOneLine() {
-    const atenciones = Array.from({ length: 1000000 }, () => {
-      const atencion = new Atencion()
-
-      return atencion
-    })
-    const all = formatSql('ATENCION', atenciones)
-
-    exportTo('sql', all, 'atenciones-all')
+  static seedCsv({ quantity = 1000000 }: SeedParams = {}) {
+    let sentence = ''
+    for (let i = 1; i <= quantity; i++) {
+      const atencion = new Atencion(i)
+      const { csv, header } = formatCSV(atencion)
+      if (i === 1) {
+        sentence += header + '\n'
+      }
+      sentence += csv + '\n'
+    }
+    exportTo('csv', sentence, 'atenciones')
   }
 }

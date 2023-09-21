@@ -1,3 +1,6 @@
-4_ATENCIONES.sql
+*.csv
+*.xlsx
 faker/node_modules
-faker/data
+faker/data/sql/*
+faker/data/json/*
+faker/data/csv/*
