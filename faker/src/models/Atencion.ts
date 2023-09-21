@@ -18,6 +18,7 @@ export class Atencion {
     idAtencion: number | null = null,
     idCita: number | null = null,
     idTipoAtencion: number | null = null,
+    idReferencia: number | null = null,
   ) {
     let llegada = faker.date.past({ years: 7 })
     const atendida = this.addRandomMinutes(llegada, 5, 30)
@@ -30,7 +31,7 @@ export class Atencion {
     this.IdDoctor = faker.number.int({ min: 1, max: CANTIDAD_DOCTORES })
     this.IdPaciente = faker.number.int({ min: 1, max: CANTIDAD_PACIENTES })
     this.IdCita = idCita
-    this.IdReferencia = null
+    this.IdReferencia = idReferencia
   }
   private addRandomMinutes(date: Date, min: number, max: number) {
     const randomMinutes = faker.number.int({
