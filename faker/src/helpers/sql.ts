@@ -14,7 +14,7 @@ export function formatSqlOne(tableName: string, data: any) {
     const sql = `INSERT INTO ${tableName} (${keys.join(",")}) VALUES (${values
         .map((item) => `${item ? `'${item}'` : null}`)
         .join(",")}) \nGO`;
-    console.log(sql);
+    // console.log(sql);
     return sql;
 }
 
