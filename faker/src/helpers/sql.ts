@@ -12,7 +12,7 @@ export function formatSqlOne(tableName: string, data: any) {
     const keys = Object.keys(data);
     const values = keys.map((key) => data[key]);
     //Si no hay Id se quita el primer elemento, solo para sql server autoincrementable
-    if (values[0] === undefined){
+    if (!values[0]){
         values.shift()
         keys.shift()
     }
