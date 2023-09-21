@@ -1,4 +1,3 @@
-*.sql
 *.csv
 *.xlsx
 faker/node_modules
