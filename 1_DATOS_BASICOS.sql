@@ -25,3 +25,6 @@ GO
 
 INSERT INTO ESPECIALIDAD(Especialidad) VALUES ('GENERAL'), ('RETINA'),('GLAUCOMA'),('PEDIATR�A'),('OCULOPLASTIA'),('NEUROLOGIA');
 GO
+
+INSERT INTO INSTITUCION_EXTERNA(Institucion) VALUES ('Hospital Regional Docente de Trujillo'), ('Hospital Belén'), ('Hospital Albrecht'), ('Hospital La Noria'),('Clínicas'), ('Otros');
+GO
