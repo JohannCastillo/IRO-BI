@@ -1,4 +1,4 @@
-import { removeApostrofe } from "./remove-apostrofe";
+import { removeApostrophe } from "./remove-apostrofe";
 
 export function formatSql(tableName: string, data: any[]) {
     const keys = Object.keys(data[0]);
@@ -20,7 +20,7 @@ export function formatSqlOne(tableName: string, data: any) {
     }
     
     const sql = `INSERT INTO ${tableName} (${keys.join(",")}) VALUES (${values
-        .map((item) => `${item ? `'${removeApostrofe(item)}'` : null}`) //avoid the ' character in item
+        .map((item) => `${item ? `'${removeApostrophe(item)}'` : null}`) //avoid the ' character in item
         .join(",")}) \nGO`;
     console.log(sql);
     return sql;

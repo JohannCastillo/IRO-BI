@@ -8,14 +8,14 @@ interface SeedParams {
 }
 export class PacienteSeeder {
 
-static seed({ quantity = 50 }: SeedParams = {}) {
+static seed({ quantity = 50000 }: SeedParams = {}) {
   let sentence = '';
   for (let i = 1; i <= quantity; i++) {
     const paciente = new Paciente();
     const sql = formatSqlOne('PACIENTE', paciente);
     sentence += sql + '\n';
   }
-  exportTo('sql', sentence, 'pacientes');
+  exportTo('sql', sentence, 'PACIENTE');
 }
 
   static seedCsv({ quantity = 50000 }: SeedParams = {}) {
