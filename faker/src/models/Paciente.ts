@@ -17,12 +17,12 @@ export class Paciente {
     TipoSangre: string
     EstadoCivil: string
     IdContactoEmergencia:number
-
-    constructor(IdPaciente?: number) {
+    
+    constructor(minDistrito: number, maxDistrito: number, IdPaciente?: number ) {
         this.IdPaciente = IdPaciente
         this.DNI = faker.string.numeric('########')
         this.IdTipoPaciente = faker.number.int({ min: 1, max: 4 })
-        this.IdDistrito = faker.number.int({ min: 1, max: 1874 })
+        this.IdDistrito = faker.number.int({min:minDistrito, max: maxDistrito  })
         this.FechaDeNacimiento = faker.date.past({years: 80, refDate: now()})
         this.Nombre = faker.person.fullName()
         this.Sexo = faker.helpers.arrayElement(['M', 'F'])
