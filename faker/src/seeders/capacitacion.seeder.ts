@@ -12,7 +12,7 @@ export class CapacitacionSeeder {
 static seed({ quantity = 250 }: SeedParams = {}) {
   let sentence = '';
   for (let i = 1; i <= quantity; i++) {
-    const cap = new Capacitacion(i);
+    const cap = new Capacitacion();
     const sql = formatSqlOne('CAPACITACION', cap);
     sentence += sql + '\n';
     console.log(i);

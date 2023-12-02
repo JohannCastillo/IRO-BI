@@ -1,16 +1,17 @@
 // import { PacienteSeeder } from './src/seeders/paciente.seeder'
 // import { ContactoEmergenciaSeeder } from './src/seeders/contactoemergencia.seeder'
-// import { HistoriaSeeder } from './src/seeders/historia.seeder'
-
-import { CapacitacionSeeder } from "./src/seeders/capacitacion.seeder";
-// import { DiagnosticoSeeder } from "./src/seeders/diagnostico.seeder";
+// import { CitaSeeder } from "./src/seeders/cita.seeder"
+// import { AtencionSeeder } from "./src/seeders/atencion.seeder"
+import { CapacitacionSeeder } from "./src/seeders/capacitacion.seeder"
+// import { CitaSeeder } from "./src/seeders/cita.seeder"
 
 function main() {
-  // PacienteSeeder.seedCsv()
-  // HistoriaSeeder.seedCsvWithAtenciones({ quantity: 50000, nAtenciones: 20 })
-  // ContactoEmergenciaSeeder.seedCsv()
-  // DiagnosticoSeeder.seed();
+  // PacienteSeeder.seed()
+  // ContactoEmergenciaSeeder.seed()
+  // AtencionSeeder.seed()
+  // CitaSeeder.seed()
   CapacitacionSeeder.seed();
+
 }
 
 main()

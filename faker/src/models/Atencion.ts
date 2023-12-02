@@ -1,42 +1,43 @@
 import moment from 'moment'
 import { faker } from '@faker-js/faker'
+import { CANTIDAD_DOCTORES, CANTIDAD_ESTADOS_ATENCION, CANTIDAD_PACIENTES, CANTIDAD_SERVICIOS } from '../constants'
 
 export class Atencion {
-  IdAtencion: number
-  IdEstado: number
+  IdAtencion: number | null
+  IdEstado: number | null
   FechaHoraLlegada: string
   FechaHoraAtendida: string
   IdTipoAtencion: number
-  IdServicio: number
-  IdHistoria: number
   IdDoctor: number
+  IdCita: number | null
+  IdReferencia: number | null
+  IdServicio: number
+  IdPaciente: number
 
   constructor(
-    idAtencion: number,
-    idHistoria: number = 0,
-    fechaAperturaHistoria: string = ''
+    idAtencion: number | null = null,
+    idCita: number | null = null,
+    idTipoAtencion: number | null = null,
+    idReferencia: number | null = null,
   ) {
+    let llegada = faker.date.past({ years: 7 })
+    const atendida = this.addRandomMinutes(llegada, 5, 30)
     this.IdAtencion = idAtencion
-    let llegada = new Date()
-    if (fechaAperturaHistoria) {
-      llegada = faker.date.between({
-        from: moment(fechaAperturaHistoria).toDate(),
-        to: moment().toDate()
-      })
-    }
-    llegada = faker.date.past({ years: 7 })
-    const randomMinutes = faker.number.int({
-      min: 5,
-      max: 60
-    })
-    const atendida = moment(llegada).add(randomMinutes, 'minutes').toDate()
-
-    this.IdEstado = faker.helpers.arrayElement([1, 2, 3, 4, 5])
+    this.IdEstado = faker.number.int({ min: 1, max: CANTIDAD_ESTADOS_ATENCION })
     this.FechaHoraLlegada = llegada.toISOString()
     this.FechaHoraAtendida = atendida.toISOString()
-    this.IdTipoAtencion = faker.helpers.arrayElement([1, 2, 3])
-    this.IdServicio = faker.helpers.arrayElement([1, 2, 3, 4, 5, 6, 7])
-    this.IdHistoria = idHistoria ?? faker.number.int({ min: 1, max: 50000 })
-    this.IdDoctor = faker.number.int({ min: 1, max: 10000 })
+    this.IdTipoAtencion = idTipoAtencion ?? faker.helpers.arrayElement([1, 3])
+    this.IdServicio = faker.number.int({ min: 1, max: CANTIDAD_SERVICIOS })
+    this.IdDoctor = faker.number.int({ min: 1, max: CANTIDAD_DOCTORES })
+    this.IdPaciente = faker.number.int({ min: 1, max: CANTIDAD_PACIENTES })
+    this.IdCita = idCita
+    this.IdReferencia = idReferencia
+  }
+  private addRandomMinutes(date: Date, min: number, max: number) {
+    const randomMinutes = faker.number.int({
+      min,
+      max
+    })
+    return moment(date).add(randomMinutes, 'minutes').toDate()
   }
 }
