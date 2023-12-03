@@ -1,0 +1,338 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlserver"
+  url      = "sqlserver://localhost:1433;database=IRO;integratedSecurity=true;trustServerCertificate=true;"
+}
+
+model DEPARTAMENTO {
+  IdDepartamento Int @db.SmallInt @id @default(autoincrement())
+  Departamento String @db.VarChar(100)
+
+  Provincias PROVINCIA[]
+}
+
+model PROVINCIA {
+  IdProvincia Int @db.Int @id @default(autoincrement())
+  IdDepartamento Int @db.SmallInt
+  Provincia String @db.VarChar(100)
+
+  Distritos DISTRITO[]
+  Departamento DEPARTAMENTO @relation(fields: [IdDepartamento], references: [IdDepartamento])
+}
+
+model DISTRITO {
+  IdDistrito Int @db.Int @id @default(autoincrement())
+  IdProvincia Int @db.Int
+  Distrito String @db.VarChar(100)
+
+  Provincia PROVINCIA @relation(fields: [IdProvincia], references: [IdProvincia])
+  Pacientes PACIENTE[]
+}
+
+
+model TIPO_ANTECEDENTE {
+  // id tipo smallint
+  IdTipo Int @db.SmallInt @id @default(autoincrement())
+  // Tipo varchar(50)
+  Tipo String @db.VarChar(50)
+
+  Antecedentes ANTECEDENTE[]
+}
+
+model ANTECEDENTE {
+  IdAntecedente Int @db.Int @id @default(autoincrement())
+  IdTipoAntecedente Int @db.SmallInt
+  Antecedente String @db.VarChar(100)
+  TipoAntecedente TIPO_ANTECEDENTE @relation(fields: [IdTipoAntecedente], references: [IdTipo])
+
+  Pacientes PACIENTE_ANTECEDENTE[]
+}
+
+model TIPO_PACIENTE {
+  IdTipoPaciente Int @db.SmallInt @id @default(autoincrement())
+  TipoPaciente String @db.VarChar(50)
+
+  Pacientes PACIENTE[]
+}
+
+model CONTACTO_EMERGENCIA {
+  IdContacto Int @db.Int @id @default(autoincrement())
+  Nombre String @db.VarChar(255)
+  Apellido String @db.VarChar(255)
+  Celular String? @db.VarChar(9) 
+  Correo String? @db.VarChar(255)
+  Relacion String? @db.VarChar(100)
+
+  // Relations
+  IdPaciente Int @db.Int @unique
+  Paciente PACIENTE @relation(fields: [IdPaciente], references: [IdPaciente])
+
+}
+
+model PACIENTE {
+  IdPaciente Int @db.Int @id @default(autoincrement())
+  NombresYApellidos String @db.VarChar(512)
+  FechaDeNacimiento DateTime @db.Date
+  DNI String @db.VarChar(8)
+  Sexo String @db.Char(1)
+  Celular String @db.VarChar(9)
+  Correo String @db.VarChar(255)
+  Observaciones String @db.Text
+  Domicilio String @db.Text
+  TipoSangre String @db.VarChar(3)
+  EstadoCivil String @db.VarChar(50)
+
+
+  // Relations
+  IdTipoPaciente Int @db.SmallInt
+  TipoPaciente TIPO_PACIENTE @relation(fields: [IdTipoPaciente], references: [IdTipoPaciente])
+  
+  IdDistrito Int @db.Int
+  Distrito DISTRITO @relation(fields: [IdDistrito], references: [IdDistrito])
+
+  ContactoEmergencia CONTACTO_EMERGENCIA?
+  Citas CITA[]
+  Atenciones ATENCION[]
+
+  Antecedentes PACIENTE_ANTECEDENTE[]
+
+  Enfermedades ENFERMEDAD_DIAGNOSTICADA[]
+}
+
+model PACIENTE_ANTECEDENTE {
+  IdAntecedente Int @db.Int
+  IdPaciente Int @db.Int
+  Detalle String @db.Text
+  FechaRegistro DateTime @db.DateTime
+  @@id([IdAntecedente, IdPaciente])
+
+  Antecedente ANTECEDENTE @relation(fields: [IdAntecedente], references: [IdAntecedente])
+  Paciente PACIENTE @relation(fields: [IdPaciente], references: [IdPaciente])
+}
+
+// DOCTOR
+model INSTITUCION{
+  IdInstitucion Int @db.Int @id @default(autoincrement())
+  Nombre String @db.VarChar(255)
+  Capacitaciones CAPACITACION[]
+}
+
+model CAPACITACION {
+  IdCapacitacion Int @db.Int @id @default(autoincrement())
+  Descripcion String @db.VarChar(255)
+  Costo Float @db.Money
+  Modalidad String @db.VarChar(255)
+  TotalSesiones Int @db.SmallInt
+  IdInstitucion Int @db.Int
+  Institucion INSTITUCION @relation(fields: [IdInstitucion], references: [IdInstitucion])
+
+  Asistencias ASISTENCIA[]
+}
+
+model ESPECIALIDAD {
+  IdEspecialidad Int @db.Int @id @default(autoincrement())
+  Especialidad String @db.VarChar(255)
+  Doctores DOCTOR[]
+}
+
+model DOCTOR {
+  IdDoctor Int @db.Int @id @default(autoincrement())
+  Nombre String @db.VarChar(512)
+  DNI String @db.VarChar(8)
+  Telefono String @db.VarChar(9)
+  Correo String @db.VarChar(255)
+  Estado String @db.VarChar(50)
+
+  // Relations
+  IdEspecialidad Int @db.Int
+  Especialidad ESPECIALIDAD @relation(fields: [IdEspecialidad], references: [IdEspecialidad])
+
+  Citas CITA[]
+  Atenciones ATENCION[]
+  Asistencias ASISTENCIA[]
+
+  Enfermedades ENFERMEDAD_DIAGNOSTICADA[]
+
+
+}
+
+model ASISTENCIA {
+  IdDoctor Int @db.Int
+  IdCapacitacion Int @db.Int
+  Sesion Int @db.SmallInt
+  Fecha DateTime @db.DateTime
+  @@id([IdDoctor, IdCapacitacion, Sesion])
+
+  Doctor DOCTOR @relation(fields: [IdDoctor], references: [IdDoctor])
+  Capacitacion CAPACITACION @relation(fields: [IdCapacitacion], references: [IdCapacitacion])
+}
+
+
+// ATENCION
+model ESTADO_ATENCION {
+  IdEstado Int @db.SmallInt @id @default(autoincrement())
+  Estado String @db.VarChar(100)
+
+  Atenciones ATENCION[]
+}
+
+model TIPO_ATENCION {
+  IdTipoAtencion Int @db.SmallInt @id @default(autoincrement())
+  TipoAtencion String @db.VarChar(100)
+
+  Atenciones ATENCION[]
+}
+
+model CITA_ESTADO {
+  IdEstado Int @db.SmallInt @id @default(autoincrement())
+  Estado String @db.VarChar(100)
+
+  Citas CITA[]
+}
+
+model CITA {
+  IdCita Int @db.Int @id @default(autoincrement())
+  Costo Float @db.Money
+  FechaHora DateTime @db.DateTime
+  Motivo String @db.Text
+
+  // Relations
+  IdPaciente Int @db.Int
+  Paciente PACIENTE @relation(fields: [IdPaciente], references: [IdPaciente])
+
+  IdDoctor Int @db.Int
+  Doctor DOCTOR @relation(fields: [IdDoctor], references: [IdDoctor])
+
+  IdEstado Int @db.SmallInt
+  Estado CITA_ESTADO @relation(fields: [IdEstado], references: [IdEstado])
+
+  Atencion ATENCION?
+}
+
+model INSTITUCION_EXTERNA {
+  IdInstitucionExterna Int @db.Int @id @default(autoincrement())
+  Institucion String @db.Text
+  Referencias REFERENCIA[]
+}
+
+model REFERENCIA {
+  IdReferencia Int @db.Int @id @default(autoincrement())
+  DoctorExterno String @db.Text
+  FechaHoraReferencia DateTime @db.DateTime
+
+  IdInstitucionExterna Int @db.Int
+  InstitucionExterna INSTITUCION_EXTERNA @relation(fields: [IdInstitucionExterna], references: [IdInstitucionExterna])
+
+  Atencion ATENCION?
+}
+
+model TIPO_SERVICIO {
+  IdTipoServicio Int @db.SmallInt @id @default(autoincrement())
+  TipoServicio String @db.VarChar(100)
+
+  Servicios SERVICIO[]
+}
+
+model SERVICIO {
+  IdServicio Int @db.Int @id @default(autoincrement())
+  Descripcion String @db.Text
+  Costo Float @db.Money
+  IdTipoServicio Int @db.SmallInt
+  TipoServicio TIPO_SERVICIO @relation(fields: [IdTipoServicio], references: [IdTipoServicio])
+
+  Atenciones ATENCION[]
+}
+
+model ATENCION {
+  IdAtencion Int @db.Int @id @default(autoincrement())
+  FechaHoraLlegada DateTime @db.DateTime
+  FechaHoraAtencion DateTime @db.DateTime
+
+  // Relations
+  IdEstado Int @db.SmallInt
+  Estado ESTADO_ATENCION @relation(fields: [IdEstado], references: [IdEstado])
+
+  IdTipoAtencion Int @db.SmallInt
+  TipoAtencion TIPO_ATENCION @relation(fields: [IdTipoAtencion], references: [IdTipoAtencion])
+
+  IdDoctor Int @db.Int
+  Doctor DOCTOR @relation(fields: [IdDoctor], references: [IdDoctor])
+
+  IdCita Int @db.Int @unique
+  Cita CITA @relation(fields: [IdCita], references: [IdCita], onDelete: NoAction, onUpdate: NoAction)
+
+  IdReferencia Int? @db.Int @unique
+  Referencia REFERENCIA? @relation(fields: [IdReferencia], references: [IdReferencia])
+
+  IdServicio Int @db.Int
+  Servicio SERVICIO @relation(fields: [IdServicio], references: [IdServicio])
+
+  IdPaciente Int @db.Int
+  Paciente PACIENTE @relation(fields: [IdPaciente], references: [IdPaciente])
+
+  Diagnosticos DIAGNOSTICO?
+}
+
+model DIAGNOSTICO {
+  IdAtencion Int @db.Int @unique @id
+
+  Observaciones String @db.Text
+
+  LejosODEsf Float @db.Float
+  LejosODCil Float @db.Float
+  LejosODEje Float @db.Float
+  LejosOIEsf Float @db.Float
+  LejosOICil Float @db.Float
+  LejosOIEje Float @db.Float
+
+  CercaODEsf Float @db.Float
+  CercaODCil Float @db.Float
+  CercaODEje Float @db.Float
+  CercaOIEsf Float @db.Float
+  CercaOICil Float @db.Float
+  CercaOIEje Float @db.Float
+
+  AgudezaVisual Float @db.Float
+  Tonometria Float @db.Float
+  Refraccion Float @db.Float
+  Campimetria Float @db.Float
+  CurvaturaCorneal Float @db.Float  
+  MedicionLagrima Float @db.Float
+  Paquimetria Float @db.Float
+  OCT Float @db.Float
+
+  Atencion ATENCION @relation(fields: [IdAtencion], references: [IdAtencion])
+
+  EnfermedadesDiagnostico ENFERMEDAD_DIAGNOSTICADA[]
+}
+
+model ENFERMEDAD_DIAGNOSTICADA {
+  IdEnfermedadDiagnostico Int @db.Int @default(autoincrement())
+  IdPaciente Int @db.Int
+  IdEnfermedad Int @db.Int
+  IdDoctor Int @db.Int
+  FechaDiagnostico DateTime @db.DateTime
+
+  IdAtencion Int @db.Int
+  Diagnostico DIAGNOSTICO @relation(fields: [IdAtencion], references: [IdAtencion])
+
+  @@id([IdEnfermedadDiagnostico, IdPaciente, IdEnfermedad, IdDoctor])
+
+  Paciente PACIENTE @relation(fields: [IdPaciente], references: [IdPaciente], onDelete: NoAction, onUpdate: NoAction)
+
+  Enfermedad ENFERMEDAD @relation(fields: [IdEnfermedad], references: [IdEnfermedad])
+
+  Doctor DOCTOR @relation(fields: [IdDoctor], references: [IdDoctor], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model ENFERMEDAD {
+  IdEnfermedad Int @db.Int @id @default(autoincrement())
+  Nombre String @db.VarChar(255)
+  Descripcion String @db.Text
+  Sintomas String @db.Text
+
+  Diagnosticos ENFERMEDAD_DIAGNOSTICADA[]
+}
