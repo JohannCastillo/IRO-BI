@@ -34,10 +34,7 @@ export class DefaultDataSeeder {
         await this.TipoAntecedente()
         await this.Enfermedades()
         await this.DatosBasicos()
-
-        
     }
-
 
     async Departamentos() {
         try {
