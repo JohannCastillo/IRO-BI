@@ -9,12 +9,12 @@ import (
 
 type PacienteAntecedente struct {
 	IdAntecedente int
-	IdPaciente    int
+	IdPaciente    int64
 	Detalle       string
 	FechaRegistro time.Time
 }
 
-func NewPacienteAntecedente(PacienteId int) PacienteAntecedente {
+func NewPacienteAntecedente(PacienteId int64) PacienteAntecedente {
 	f := fake
 	data := database.GetDataDefault()
 	return PacienteAntecedente{
@@ -30,7 +30,7 @@ func (p PacienteAntecedente) GetQuery() string {
 
 	return "(" +
 		strconv.Itoa(p.IdAntecedente) + ",\n" +
-		strconv.Itoa(p.IdPaciente) + "," +
+		strconv.FormatInt(p.IdPaciente, 10) + "," +
 		`'` + p.Detalle + `',` +
 		"CONVERT(datetime,'" + p.FechaRegistro.Format("2006-01-02 15:04:05") + "', 120)" +
 		`)`

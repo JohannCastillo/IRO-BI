@@ -40,14 +40,7 @@ func generateDoctores(cantidad int, dataChan chan<- SeederStruct) {
 	for i := 0; i < cantidad; i += constants.MAX_SAVES {
 		doctores := SeederStruct{}
 
-		doctores.Query = `INSERT INTO DOCTOR (
-			Nombre, 
-			DNI, 
-			Telefono, 
-			Correo,
-			Estado, 
-			IdEspecialidad) 
-			VALUES `
+		doctores.Query = constants.INSERT_DOCTOR
 
 		remain := cantidad - i
 

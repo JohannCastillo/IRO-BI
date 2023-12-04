@@ -40,31 +40,14 @@ func PacienteSeeder(cantidad int, wgParent *sync.WaitGroup, bar *pb.ProgressBar)
 }
 
 func generatePaciente(cantidad int, dataChan chan<- SeederStruct) {
-	database.GetNumAntecedentes()
 	database.GetNumPacientes()
 	data := database.GetDataDefault()
 	f := classes.GetFaker()
 	for i := 0; i < cantidad; i += constants.MAX_SAVES {
 		pacientes := SeederStruct{}
-		pacientes.Query = `INSERT INTO PACIENTE (
-			NombresYApellidos, 
-			FechaDeNacimiento, 
-			DNI, 
-			Sexo, 
-			Celular, 
-			Correo, 
-			Observaciones, 
-			Domicilio,
-			TipoSangre, 
-			EstadoCivil, 
-			IdTipoPaciente, 
-			IdDistrito) VALUES `
+		pacientes.Query = constants.INSERT_PACIENTE
 
-		antecedentesQuery := `INSERT INTO PACIENTE_ANTECEDENTE (
-			IdAntecedente,
-			IdPaciente,
-			Detalle,
-			FechaRegistro) VALUES `
+		antecedentesQuery := constants.INSERT_PACIENTE_ANTECEDENTE
 
 		remain := cantidad - i
 
@@ -79,14 +62,14 @@ func generatePaciente(cantidad int, dataChan chan<- SeederStruct) {
 			if j < remain-1 {
 				pacientes.Query += ", "
 
-				if f.IntBetween(0, 100) <= 95 {
+				if f.IntBetween(0, 100) <= constants.P_PACIENTE_HAS_ANTECEDENTE {
 					// 95% de probabilidad de que tenga antecedentes
-					antecedente := classes.NewPacienteAntecedente(data.MaxIdPaciente + i + j)
+					antecedente := classes.NewPacienteAntecedente(data.MaxIdPaciente + int64(i+j))
 					antecedentesQuery += antecedente.GetQuery() + ", "
 				}
 
 			} else {
-				antecedente := classes.NewPacienteAntecedente(data.MaxIdPaciente + i + j)
+				antecedente := classes.NewPacienteAntecedente(data.MaxIdPaciente + int64(i+j))
 				antecedentesQuery += antecedente.GetQuery()
 			}
 
@@ -130,7 +113,7 @@ func generateAntecedentePaciente(dataChan chan<- SeederStruct) {
 			remain = constants.MAX_SAVES
 		}
 
-		for j := 0; j < remain; j++ {
+		for j := int64(0); j < remain; j++ {
 			antecedente := classes.NewPacienteAntecedente(i)
 			antecedentes.Query += antecedente.GetQuery()
 
@@ -139,7 +122,7 @@ func generateAntecedentePaciente(dataChan chan<- SeederStruct) {
 			}
 
 		}
-		antecedentes.total = remain
+		antecedentes.total = int(remain)
 		dataChan <- antecedentes
 	}
 }

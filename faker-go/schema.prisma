@@ -226,7 +226,7 @@ model REFERENCIA {
   IdInstitucionExterna Int @db.Int
   InstitucionExterna INSTITUCION_EXTERNA @relation(fields: [IdInstitucionExterna], references: [IdInstitucionExterna])
 
-  Atencion ATENCION?
+  Atencion ATENCION[]
 }
 
 model TIPO_SERVICIO {
@@ -264,7 +264,7 @@ model ATENCION {
   IdCita Int @db.Int @unique
   Cita CITA @relation(fields: [IdCita], references: [IdCita], onDelete: NoAction, onUpdate: NoAction)
 
-  IdReferencia Int? @db.Int @unique
+  IdReferencia Int? @db.Int
   Referencia REFERENCIA? @relation(fields: [IdReferencia], references: [IdReferencia])
 
   IdServicio Int @db.Int

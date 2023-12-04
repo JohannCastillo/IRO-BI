@@ -22,11 +22,9 @@ func Seed() {
 	NDoctores := flag.Int("d", 0, "Cantidad de doctores a crear")
 	SeedDefault := flag.Bool("def", false, "Crear antecedentes")
 	NPacientes := flag.Int("p", 0, "Cantidad de pacientes a crear")
-	// PacientesWithAntecedes := flag.Bool("pa", false, "Crear antecedentes")
+	NAtenciones := flag.Int("at", 0, "Crear Atencion")
 
 	flag.Parse()
-
-	database.InitDataDefault()
 
 	var wg sync.WaitGroup
 	pool, err := pb.StartPool()
@@ -34,10 +32,16 @@ func Seed() {
 		panic(err)
 	}
 
-	if *SeedDefault {
+	fmt.Println("Iniciando ...")
+	err = database.InitDataDefault()
+
+	fmt.Println("Listo para iniciar ...")
+
+	if *SeedDefault || err != nil {
 		antecedentesBar := utils.NewPB("Creando antecedentes ...", len(defaultValues))
 		pool.Add(antecedentesBar)
 		seedDefault(antecedentesBar)
+		database.InitDataDefault()
 	}
 
 	if *NPacientes > 0 {
@@ -64,6 +68,15 @@ func Seed() {
 	}
 
 	wg.Wait()
+
+	if *NAtenciones > 0 {
+		wg.Add(1)
+		atencionBar := utils.NewPB("Creando atenciones ...", *NAtenciones)
+		pool.Add(atencionBar)
+		go AtencionSeeder(*NAtenciones, &wg, atencionBar)
+	}
+
+	wg.Wait()
 	pool.Stop()
 
 }
@@ -78,9 +91,10 @@ func Save(wg *sync.WaitGroup, dataChan <-chan SeederStruct, bar *pb.ProgressBar)
 		_ = data
 		if err != nil {
 			// finish the program
+			bar.Set("prefix", utils.GetPrefix("Error al crear datos :o"))
+			fmt.Println(err)
 			bar.Err()
 			bar.Finish()
-			bar.Set("prefix", utils.GetPrefix("Error al crear datos :o"))
 			return
 		}
 		bar.Add(data.total)
