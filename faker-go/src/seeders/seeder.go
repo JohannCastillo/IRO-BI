@@ -19,11 +19,14 @@ type SeederStruct struct {
 
 func Seed() {
 
-	NPacientes := flag.Int("p", 0, "Cantidad de pacientes a crear")
 	NDoctores := flag.Int("d", 0, "Cantidad de doctores a crear")
 	SeedDefault := flag.Bool("def", false, "Crear antecedentes")
+	NPacientes := flag.Int("p", 0, "Cantidad de pacientes a crear")
+	// PacientesWithAntecedes := flag.Bool("pa", false, "Crear antecedentes")
 
 	flag.Parse()
+
+	database.InitDataDefault()
 
 	var wg sync.WaitGroup
 	pool, err := pb.StartPool()
@@ -34,16 +37,24 @@ func Seed() {
 	if *SeedDefault {
 		antecedentesBar := utils.NewPB("Creando antecedentes ...", len(defaultValues))
 		pool.Add(antecedentesBar)
-		seedAntecedentes(antecedentesBar)
+		seedDefault(antecedentesBar)
 	}
 
 	if *NPacientes > 0 {
-
 		wg.Add(1)
 		pacienteBar := utils.NewPB("Creando pacientes ...", *NPacientes)
 		pool.Add(pacienteBar)
 		go PacienteSeeder(*NPacientes, &wg, pacienteBar)
 	}
+	// else if *PacientesWithAntecedes {
+	// 	database.GetNumPacientes()
+	// 	database.GetNumAntecedentes()
+
+	// 	wg.Add(1)
+	// 	pacienteAntecedenteBar := utils.NewPB("Creando antecedentes ...", database.GetDataDefault().MaxIdPaciente-database.GetDataDefault().MinIdPaciente+1)
+	// 	pool.Add(pacienteAntecedenteBar)
+	// 	go PacienteAntecedenteSeeder(&wg, pacienteAntecedenteBar)
+	// }
 
 	if *NDoctores > 0 {
 		wg.Add(1)
@@ -67,10 +78,9 @@ func Save(wg *sync.WaitGroup, dataChan <-chan SeederStruct, bar *pb.ProgressBar)
 		_ = data
 		if err != nil {
 			// finish the program
-			fmt.Printf("Error inserting data: %v", err)
-			fmt.Println(data.Query)
 			bar.Err()
 			bar.Finish()
+			bar.Set("prefix", utils.GetPrefix("Error al crear datos :o"))
 			return
 		}
 		bar.Add(data.total)
@@ -87,7 +97,17 @@ var defaultValues = []string{
 	"DATOS_BASICOS",
 }
 
-func seedAntecedentes(bar *pb.ProgressBar) {
+func seedDefault(bar *pb.ProgressBar) {
+
+	data := database.GetDataDefault()
+
+	if data.MaxIdDistrito != 0 {
+		bar.Add(len(defaultValues))
+		bar.Finish()
+		bar.Set("prefix", utils.GetPrefix("Datos Básicos ya creados!"))
+		return
+	}
+
 	conn := database.GetConnection()
 
 	for _, table := range defaultValues {
@@ -104,4 +124,6 @@ func seedAntecedentes(bar *pb.ProgressBar) {
 
 		bar.Add(1)
 	}
+	bar.Finish()
+	bar.Set("prefix", utils.GetPrefix("Datos Básicos creados!"))
 }
