@@ -8,6 +8,7 @@ require (
 	github.com/Azure/azure-sdk-for-go/sdk/internal v1.3.0 // indirect
 	github.com/AzureAD/microsoft-authentication-library-for-go v1.1.0 // indirect
 	github.com/VividCortex/ewma v1.2.0 // indirect
+	github.com/cheggaaa/pb v1.0.29 // indirect
 	github.com/cheggaaa/pb/v3 v3.1.4 // indirect
 	github.com/denisenkom/go-mssqldb v0.12.3 // indirect
 	github.com/fatih/color v1.15.0 // indirect

@@ -20,5 +20,5 @@ func main() {
 		fmt.Printf("Error connecting to database: %v", err)
 	}
 
-	seeders.PacienteSeeder()
+	seeders.Seed()
 }

@@ -33,7 +33,6 @@ func Connect() (DatabaseConnection, error) {
 		return DatabaseConnection{}, err
 	}
 
-	fmt.Println("Connected!")
 	return dbConn, nil
 }
 

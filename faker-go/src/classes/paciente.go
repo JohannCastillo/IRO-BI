@@ -22,11 +22,11 @@ type Paciente struct {
 	IdDistrito        int
 }
 
-func NewPaciente(id int) Paciente {
+func NewPaciente() Paciente {
 	f := fake
 	sexos := []string{"H", "M"}
 	return Paciente{
-		IdPaciente:        id,
+		IdPaciente:        0,
 		NombresYApellidos: f.Person().Name() + " " + f.Person().LastName(),
 		FechaDeNacimiento: f.Time().TimeBetween(time.Now().AddDate(-100, 0, 0), time.Now().AddDate(-3, 0, 0)),
 		DNI:               f.Person().SSN()[0:8],
@@ -63,6 +63,28 @@ func (p Paciente) GetQuery() string {
 	p.NombresYApellidos = strings.ReplaceAll(p.NombresYApellidos, "'", "")
 	p.Observaciones = strings.ReplaceAll(p.Observaciones, "'", "")
 	p.Domicilio = strings.ReplaceAll(p.Domicilio, "'", "")
+
+	return "(" +
+		"'" + p.NombresYApellidos + "', \n" +
+		"CONVERT(datetime,'" + p.FechaDeNacimiento.Format("2006-01-02 15:04:05") + "', 120)," +
+		"'" + p.DNI + "'," +
+		"'" + p.Sexo + "'," +
+		"'" + p.Celular + "'," +
+		"'" + p.Correo + "'," +
+		"'" + p.Observaciones + "'," +
+		"'" + p.Domicilio + "'," +
+		"'" + p.TipoSangre + "'," +
+		"'" + p.EstadoCivil + "', " +
+		strconv.Itoa(p.IdTipoPaciente) + ", " +
+		strconv.Itoa(p.IdDistrito) + ")"
+}
+
+func GetQueryPaciente(p Paciente) string {
+	// Replace ' with '' for SQL Server
+	p.NombresYApellidos = strings.ReplaceAll(p.NombresYApellidos, "'", "")
+	p.Observaciones = strings.ReplaceAll(p.Observaciones, "'", "")
+	p.Domicilio = strings.ReplaceAll(p.Domicilio, "'", "")
+
 	return "('" +
 		p.NombresYApellidos + "', " +
 		"CONVERT(datetime,'" + p.FechaDeNacimiento.Format("2006-01-02 15:04:05") + "', 120), '" +

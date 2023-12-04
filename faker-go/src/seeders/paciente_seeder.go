@@ -3,16 +3,11 @@ package seeders
 import (
 	"IRO-Group/IRO-Golang/src/classes"
 	"IRO-Group/IRO-Golang/src/constants"
-	"IRO-Group/IRO-Golang/src/database"
 	"IRO-Group/IRO-Golang/src/utils"
-	"fmt"
 	"sync"
+	"time"
 
-	"github.com/schollz/progressbar/v3"
-)
-
-var (
-	bar *progressbar.ProgressBar
+	"github.com/cheggaaa/pb/v3"
 )
 
 type PacienteSeederStruct struct {
@@ -20,44 +15,37 @@ type PacienteSeederStruct struct {
 	Query     string
 }
 
-func PacienteSeeder() {
-	var wg sync.WaitGroup
-	bar = utils.GetProgressbar("Creando pacientes ...", constants.NUMBER_OF_PATIENTS)
+func TestingBarPaciente(cantidad int, wgParent *sync.WaitGroup, bar3 *pb.ProgressBar) {
+	defer wgParent.Done()
 
-	dataChan := make(chan PacienteSeederStruct)
+	for i := 0; i < cantidad; i++ {
+		bar3.Add(1)
+		time.Sleep(100 * time.Millisecond)
+	}
+	bar3.Finish()
+}
+
+func PacienteSeeder(cantidad int, wgParent *sync.WaitGroup, bar *pb.ProgressBar) {
+	defer wgParent.Done()
+	var wg sync.WaitGroup
+
+	dataChan := make(chan SeederStruct)
 
 	wg.Add(1)
-	go savePaciente(&wg, dataChan)
+	go Save(&wg, dataChan, bar)
 
-	generatePaciente(dataChan)
+	generatePaciente(cantidad, dataChan)
 	close(dataChan)
 
 	wg.Wait()
-	fmt.Println("Pacientes creados!")
+
+	bar.Set("prefix", utils.GetPrefix("Pacientes Creados!"))
 
 }
 
-func savePaciente(wg *sync.WaitGroup, dataChan <-chan PacienteSeederStruct) {
-	defer wg.Done()
-
-	conn := database.GetConnection()
-	for data := range dataChan {
-		_, err := conn.SqlDb.Exec(data.Query)
-		_ = data
-		if err != nil {
-			// finish the program
-			fmt.Printf("Error inserting data: %v", err)
-			fmt.Println(data.Query)
-			return
-		}
-		bar.Add(len(data.Pacientes))
-	}
-}
-
-func generatePaciente(dataChan chan<- PacienteSeederStruct) {
-	for i := 0; i < constants.NUMBER_OF_PATIENTS/constants.MAX_SAVES; i++ {
-		pacientes := PacienteSeederStruct{}
-		pacientes.Pacientes = []classes.Paciente{}
+func generatePaciente(cantidad int, dataChan chan<- SeederStruct) {
+	for i := 0; i < cantidad; i += constants.MAX_SAVES {
+		pacientes := SeederStruct{}
 		pacientes.Query = `INSERT INTO PACIENTE (
 			NombresYApellidos, 
 			FechaDeNacimiento, 
@@ -72,17 +60,23 @@ func generatePaciente(dataChan chan<- PacienteSeederStruct) {
 			IdTipoPaciente, 
 			IdDistrito) VALUES `
 
-		for j := 0; j < constants.MAX_SAVES; j++ {
-			paciente := classes.NewPaciente(i*constants.MAX_SAVES + j + 1)
+		remain := cantidad - i
 
-			pacientes.Pacientes = append(pacientes.Pacientes, paciente)
+		if remain > constants.MAX_SAVES {
+			remain = constants.MAX_SAVES
+		}
+
+		for j := 0; j < remain; j++ {
+			paciente := classes.NewPaciente()
+			// pacientes.Pacientes = append(pacientes.Pacientes, paciente)
 			pacientes.Query += paciente.GetQuery()
 
-			if j < constants.MAX_SAVES-1 {
+			if j < remain-1 {
 				pacientes.Query += ", "
 			}
 
 		}
+		pacientes.total = remain
 		dataChan <- pacientes
 	}
 }
