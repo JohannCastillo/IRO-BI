@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "sqlserver"
-  url      = "sqlserver://localhost:1433;database=IRO;integratedSecurity=true;trustServerCertificate=true;"
+  url      = "sqlserver://localhost:1433;database=IRO_PRUEBA;integratedSecurity=true;trustServerCertificate=true;"
 }
 
 model DEPARTAMENTO {
@@ -209,7 +209,7 @@ model CITA {
   IdEstado Int @db.SmallInt
   Estado CITA_ESTADO @relation(fields: [IdEstado], references: [IdEstado])
 
-  Atencion ATENCION?
+  Atencion ATENCION[]
 }
 
 model INSTITUCION_EXTERNA {
@@ -226,7 +226,7 @@ model REFERENCIA {
   IdInstitucionExterna Int @db.Int
   InstitucionExterna INSTITUCION_EXTERNA @relation(fields: [IdInstitucionExterna], references: [IdInstitucionExterna])
 
-  Atencion ATENCION?
+  Atencion ATENCION[]
 }
 
 model TIPO_SERVICIO {
@@ -261,10 +261,10 @@ model ATENCION {
   IdDoctor Int @db.Int
   Doctor DOCTOR @relation(fields: [IdDoctor], references: [IdDoctor])
 
-  IdCita Int @db.Int @unique
-  Cita CITA @relation(fields: [IdCita], references: [IdCita], onDelete: NoAction, onUpdate: NoAction)
+  IdCita Int? @db.Int
+  Cita CITA? @relation(fields: [IdCita], references: [IdCita], onDelete: NoAction, onUpdate: NoAction)
 
-  IdReferencia Int? @db.Int @unique
+  IdReferencia Int? @db.Int 
   Referencia REFERENCIA? @relation(fields: [IdReferencia], references: [IdReferencia])
 
   IdServicio Int @db.Int
