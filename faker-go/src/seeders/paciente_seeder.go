@@ -5,6 +5,7 @@ import (
 	"IRO-Group/IRO-Golang/src/constants"
 	"IRO-Group/IRO-Golang/src/database"
 	"IRO-Group/IRO-Golang/src/utils"
+	"strconv"
 	"sync"
 	"time"
 
@@ -25,12 +26,12 @@ func PacienteSeeder(cantidad int, wgParent *sync.WaitGroup, bar *pb.ProgressBar)
 	defer wgParent.Done()
 	var wg sync.WaitGroup
 
-	dataChan := make(chan SeederStruct)
+	dataChan := make(chan SeederStruct, 100)
 
 	wg.Add(1)
 	go Save(&wg, dataChan, bar)
 
-	generatePaciente(cantidad, dataChan)
+	generatePaciente(cantidad, dataChan, bar)
 	close(dataChan)
 
 	wg.Wait()
@@ -39,7 +40,7 @@ func PacienteSeeder(cantidad int, wgParent *sync.WaitGroup, bar *pb.ProgressBar)
 
 }
 
-func generatePaciente(cantidad int, dataChan chan<- SeederStruct) {
+func generatePaciente(cantidad int, dataChan chan<- SeederStruct, bar *pb.ProgressBar) {
 	database.GetNumPacientes()
 	data := database.GetDataDefault()
 	f := classes.GetFaker()
@@ -76,8 +77,11 @@ func generatePaciente(cantidad int, dataChan chan<- SeederStruct) {
 		}
 		pacientes.total = remain
 		pacientes.Query += "; " + antecedentesQuery
+		bar.Set("prefix", utils.GetPrefix(strconv.Itoa(i/1000)+"k Generando pacientes..."))
+
 		dataChan <- pacientes
 	}
+	bar.Set("prefix", utils.GetPrefix("✅ Generando pacientes..."))
 }
 
 func PacienteAntecedenteSeeder(wgParent *sync.WaitGroup, bar *pb.ProgressBar) {

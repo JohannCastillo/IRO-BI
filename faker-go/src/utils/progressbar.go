@@ -52,7 +52,7 @@ func NewPB(name string, max int) *pb.ProgressBar {
 
 	bar.Set("prefix", name)
 
-	bar.SetMaxWidth(80)
+	bar.SetMaxWidth(100)
 
 	bar.SetTemplateString(templ)
 

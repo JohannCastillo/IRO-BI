@@ -5,6 +5,7 @@ import (
 	"IRO-Group/IRO-Golang/src/constants"
 	"IRO-Group/IRO-Golang/src/database"
 	"IRO-Group/IRO-Golang/src/utils"
+	"strconv"
 	"sync"
 
 	"github.com/cheggaaa/pb/v3"
@@ -14,12 +15,12 @@ func AtencionSeeder(cantidad int, wgParent *sync.WaitGroup, bar *pb.ProgressBar)
 	defer wgParent.Done()
 	var wg sync.WaitGroup
 
-	dataChan := make(chan SeederStruct)
+	dataChan := make(chan SeederStruct, 100)
 
 	wg.Add(1)
 	go Save(&wg, dataChan, bar)
 
-	generateAtencion(cantidad, dataChan)
+	generateAtencion(cantidad, dataChan, bar)
 	close(dataChan)
 
 	wg.Wait()
@@ -27,7 +28,8 @@ func AtencionSeeder(cantidad int, wgParent *sync.WaitGroup, bar *pb.ProgressBar)
 	bar.Set("prefix", utils.GetPrefix("Pacientes Creados!"))
 }
 
-func generateAtencion(cantidad int, dataChan chan<- SeederStruct) {
+func generateAtencion(cantidad int, dataChan chan<- SeederStruct, bar *pb.ProgressBar) {
+
 	f := classes.GetFaker()
 	database.GetNumPacientes()
 	database.GetNumDoctores()
@@ -36,6 +38,7 @@ func generateAtencion(cantidad int, dataChan chan<- SeederStruct) {
 	maxCita := data.MaxIdCita + 1
 
 	for i := 0; i < cantidad; i += constants.MAX_SAVES {
+		// fmt.Println(i)
 		atenciones := SeederStruct{}
 		atencionesQuery := constants.INSERT_ATENCION
 		citaQuery := constants.INSERT_CITA
@@ -71,6 +74,8 @@ func generateAtencion(cantidad int, dataChan chan<- SeederStruct) {
 		}
 		atenciones.total = remain
 		atenciones.Query = citaQuery + ";" + atencionesQuery + ";"
+		bar.Set("prefix", utils.GetPrefix(strconv.Itoa(i/1000)+"k Generando Atenciones..."))
 		dataChan <- atenciones
 	}
+	bar.Set("prefix", utils.GetPrefix("✅ Generando Atenciones..."))
 }
