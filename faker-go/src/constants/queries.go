@@ -48,4 +48,10 @@ const (
 		IdPaciente,
 		IdDoctor,
 		IdEstado) VALUES `
+
+	INSERT_REFERENCIA = `INSERT INTO REFERENCIA (
+		DoctorExterno,
+		FechaHoraReferencia,
+		IdInstitucionExterna)
+		VALUES `
 )

@@ -25,7 +25,7 @@ func AtencionSeeder(cantidad int, wgParent *sync.WaitGroup, bar *pb.ProgressBar)
 
 	wg.Wait()
 
-	bar.Set("prefix", utils.GetPrefix("Pacientes Creados!"))
+	bar.Set("prefix", utils.GetPrefix("Atenciones Creadas!"))
 }
 
 func generateAtencion(cantidad int, dataChan chan<- SeederStruct, bar *pb.ProgressBar) {
@@ -34,14 +34,17 @@ func generateAtencion(cantidad int, dataChan chan<- SeederStruct, bar *pb.Progre
 	database.GetNumPacientes()
 	database.GetNumDoctores()
 	database.GetNumCitas()
+	database.GetNumReferencias()
 	data := database.GetDataDefault()
 	maxCita := data.MaxIdCita + 1
+	maxReferencia := data.MaxIdReferencia + 1
 
 	for i := 0; i < cantidad; i += constants.MAX_SAVES {
 		// fmt.Println(i)
 		atenciones := SeederStruct{}
 		atencionesQuery := constants.INSERT_ATENCION
 		citaQuery := constants.INSERT_CITA
+		referenciaQuery := constants.INSERT_REFERENCIA
 
 		remain := cantidad - i
 
@@ -61,6 +64,13 @@ func generateAtencion(cantidad int, dataChan chan<- SeederStruct, bar *pb.Progre
 					maxCita++
 				}
 
+				if f.IntBetween(0, 100) <= constants.P_ATENCION_HAS_REFERENCIA {
+					referencia := classes.NewReferenciaAtencion(atencion)
+					referenciaQuery += referencia.GetQuery() + ", "
+					atencion.IdReferencia = maxReferencia
+					maxReferencia++
+				}
+
 				atencionesQuery += atencion.GetQuery()
 				atencionesQuery += ", "
 
@@ -70,10 +80,16 @@ func generateAtencion(cantidad int, dataChan chan<- SeederStruct, bar *pb.Progre
 				atencion.IdCita = maxCita
 				maxCita++
 				atencionesQuery += atencion.GetQuery()
+
+				referencia := classes.NewReferenciaAtencion(atencion)
+				referenciaQuery += referencia.GetQuery()
+				atencion.IdReferencia = maxReferencia
+				maxReferencia++
+
 			}
 		}
 		atenciones.total = remain
-		atenciones.Query = citaQuery + ";" + atencionesQuery + ";"
+		atenciones.Query = citaQuery + ";" + referenciaQuery + ";" + atencionesQuery + ";"
 		bar.Set("prefix", utils.GetPrefix(strconv.Itoa(i/1000)+"k Generando Atenciones..."))
 		dataChan <- atenciones
 	}

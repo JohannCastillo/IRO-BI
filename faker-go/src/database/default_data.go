@@ -36,6 +36,12 @@ type DataDefault struct {
 	MinIdDistrito int
 	MaxIdDistrito int
 
+	MinIdTrujillo int
+	MaxIdTrujillo int
+
+	MinIdLaLibertad int
+	MaxIdLaLibertad int
+
 	MinIdInstitucionExternas int
 	MaxIdInstitucionExternas int
 
@@ -54,6 +60,9 @@ type DataDefault struct {
 
 	MinIdCita int64
 	MaxIdCita int64
+
+	MinIdReferencia int64
+	MaxIdReferencia int64
 }
 
 var dataDefault DataDefault
@@ -133,7 +142,18 @@ func InitDataDefault() error {
 		return err
 	}
 
-	return nil
+	err = conn.SqlDb.QueryRow(`SELECT MIN(d.IdDistrito), Max(d.IdDistrito) 
+		FROM PROVINCIA P
+		INNER JOIN DISTRITO D on d.IdProvincia = p.IdProvincia
+		Where IdDepartamento = 13`).Scan(&dataDefault.MinIdTrujillo, &dataDefault.MaxIdTrujillo)
+
+	if err != nil {
+		return err
+	}
+
+	err = conn.SqlDb.QueryRow("SELECT MIN(IdDistrito), MAX(IdDistrito) from DISTRITO WHERE IdProvincia = 112").Scan(&dataDefault.MinIdLaLibertad, &dataDefault.MaxIdLaLibertad)
+
+	return err
 
 }
 
@@ -218,6 +238,27 @@ func GetNumCitas() {
 
 	if MaxIdCita != nil {
 		dataDefault.MaxIdCita = MaxIdCita.(int64)
+	}
+}
+
+func GetNumReferencias() {
+	db := GetConnection()
+
+	var MinIdReferencia any
+	var MaxIdReferencia any
+
+	err := db.SqlDb.QueryRow("SELECT MIN(idReferencia), MAX(idReferencia) FROM REFERENCIA").Scan(&MinIdReferencia, &MaxIdReferencia)
+
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	if MinIdReferencia != nil {
+		dataDefault.MinIdReferencia = MinIdReferencia.(int64)
+	}
+
+	if MaxIdReferencia != nil {
+		dataDefault.MaxIdReferencia = MaxIdReferencia.(int64)
 	}
 }
 

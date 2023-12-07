@@ -1,6 +1,8 @@
 package classes
 
 import (
+	"IRO-Group/IRO-Golang/src/constants"
+	"IRO-Group/IRO-Golang/src/database"
 	"strconv"
 	"strings"
 	"time"
@@ -25,6 +27,21 @@ type Paciente struct {
 func NewPaciente() Paciente {
 	f := fake
 	sexos := []string{"H", "M"}
+
+	data := database.GetDataDefault()
+
+	IdDistrito := 0
+
+	if f.IntBetween(0, 100) < constants.P_PACIENTE_IS_TRUJILLO {
+		IdDistrito = f.IntBetween(data.MinIdTrujillo, data.MaxIdTrujillo)
+	} else {
+		if f.IntBetween(0, 100) < constants.P_PACIENTE_IS_LALIBERTAD {
+			IdDistrito = f.IntBetween(data.MinIdLaLibertad, data.MaxIdLaLibertad)
+		} else {
+			IdDistrito = f.IntBetween(data.MinIdDistrito, data.MaxIdDistrito)
+		}
+	}
+
 	return Paciente{
 		IdPaciente:        0,
 		NombresYApellidos: f.Person().Name() + " " + f.Person().LastName(),
@@ -38,7 +55,7 @@ func NewPaciente() Paciente {
 		TipoSangre:        f.RandomStringElement([]string{"A+", "A-", "B+", "B-", "AB+", "AB-", "O+", "O-"}),
 		EstadoCivil:       f.RandomStringElement([]string{"Soltero", "Casado", "Divorciado", "Viudo"}),
 		IdTipoPaciente:    f.IntBetween(1, 4),
-		IdDistrito:        f.IntBetween(1, 1740),
+		IdDistrito:        IdDistrito,
 	}
 }
 

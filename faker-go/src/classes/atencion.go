@@ -14,7 +14,7 @@ type Atencion struct {
 	IdTipoAtencion   int
 	IdDoctor         int64
 	IdCita           int64
-	IdReferencia     int
+	IdReferencia     int64
 	IdServicio       int
 	IdPaciente       int64
 }
@@ -44,7 +44,7 @@ func (a *Atencion) GetQuery() string {
 
 	IdReferencia := "NULL"
 	if a.IdReferencia != 0 {
-		IdReferencia = strconv.Itoa(a.IdReferencia)
+		IdReferencia = strconv.FormatInt(a.IdReferencia, 10)
 	}
 
 	return "(" +
