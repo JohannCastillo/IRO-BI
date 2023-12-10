@@ -48,6 +48,9 @@ type DataDefault struct {
 	MinIdEnfermedad int
 	MaxIdEnfermedad int
 
+	MinIdInstitucionCapacitacion int
+	MaxIdInstitucionCapacitacion int
+
 	// Others
 	MinIdDoctor int64
 	MaxIdDoctor int64
@@ -55,8 +58,8 @@ type DataDefault struct {
 	MinIdPaciente int64
 	MaxIdPaciente int64
 
-	MinIdAtencion int64
-	MaxIdAtencion int64
+	MinIdCapacitacion int64
+	MaxIdCapacitacion int64
 
 	MinIdCita int64
 	MaxIdCita int64
@@ -153,6 +156,12 @@ func InitDataDefault() error {
 
 	err = conn.SqlDb.QueryRow("SELECT MIN(IdDistrito), MAX(IdDistrito) from DISTRITO WHERE IdProvincia = 112").Scan(&dataDefault.MinIdLaLibertad, &dataDefault.MaxIdLaLibertad)
 
+	if err != nil {
+		return err
+	}
+
+	err = conn.SqlDb.QueryRow("SELECT MIN(IdInstitucion), MAX(IdInstitucion) FROM INSTITUCION").Scan(&dataDefault.MinIdInstitucionCapacitacion, &dataDefault.MaxIdInstitucionCapacitacion)
+
 	return err
 
 }
@@ -199,24 +208,24 @@ func GetNumDoctores() {
 	}
 }
 
-func GetNumAtenciones() {
+func GetNumCapacitaciones() {
 	db := GetConnection()
 
-	var MinIdAtencion any
-	var MaxIdAtencion any
+	var MinIdCapacitacion any
+	var MaxIdCapacitacion any
 
-	err := db.SqlDb.QueryRow("SELECT MIN(idAtencion), MAX(idAtencion) FROM ATENCION").Scan(&MinIdAtencion, &MaxIdAtencion)
+	err := db.SqlDb.QueryRow("SELECT MIN(IdCapacitacion), MAX(IdCapacitacion) FROM CAPACITACION").Scan(&MinIdCapacitacion, &MaxIdCapacitacion)
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	if MinIdAtencion != nil {
-		dataDefault.MinIdAtencion = MinIdAtencion.(int64)
+	if MinIdCapacitacion != nil {
+		dataDefault.MinIdCapacitacion = MinIdCapacitacion.(int64)
 	}
 
-	if MaxIdAtencion != nil {
-		dataDefault.MaxIdAtencion = MaxIdAtencion.(int64)
+	if MaxIdCapacitacion != nil {
+		dataDefault.MaxIdCapacitacion = MaxIdCapacitacion.(int64)
 	}
 }
 

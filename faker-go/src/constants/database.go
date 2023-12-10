@@ -1,7 +1,9 @@
 package constants
 
 const (
-	MAX_SAVES = 1000
-
-	NUMBER_OF_PATIENTS = 100000
+	MaxSaves                  = 1000
+	MaxForCapacitaciones      = 100
+	MaxSessionForCapacitacion = 10
+	MinDoctorsForCapacitacion = 5
+	MaxDoctorsForCapacitacion = 20
 )

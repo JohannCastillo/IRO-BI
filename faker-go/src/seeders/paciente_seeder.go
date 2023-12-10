@@ -44,16 +44,16 @@ func generatePaciente(cantidad int, dataChan chan<- SeederStruct, bar *pb.Progre
 	database.GetNumPacientes()
 	data := database.GetDataDefault()
 	f := classes.GetFaker()
-	for i := 0; i < cantidad; i += constants.MAX_SAVES {
+	for i := 0; i < cantidad; i += constants.MaxSaves {
 		pacientes := SeederStruct{}
-		pacientes.Query = constants.INSERT_PACIENTE
+		pacientes.Query = constants.InsertPaciente
 
-		antecedentesQuery := constants.INSERT_PACIENTE_ANTECEDENTE
+		antecedentesQuery := constants.InsertPacienteAntecedente
 
 		remain := cantidad - i
 
-		if remain > constants.MAX_SAVES {
-			remain = constants.MAX_SAVES
+		if remain > constants.MaxSaves {
+			remain = constants.MaxSaves
 		}
 
 		for j := 0; j < remain; j++ {
@@ -103,7 +103,7 @@ func PacienteAntecedenteSeeder(wgParent *sync.WaitGroup, bar *pb.ProgressBar) {
 
 func generateAntecedentePaciente(dataChan chan<- SeederStruct) {
 	data := database.GetDataDefault()
-	for i := data.MinIdPaciente; i < data.MaxIdPaciente; i += constants.MAX_SAVES {
+	for i := data.MinIdPaciente; i < data.MaxIdPaciente; i += constants.MaxSaves {
 		antecedentes := SeederStruct{}
 		antecedentes.Query = `INSERT INTO PACIENTE_ANTECEDENTE (
 			IdAntecedente,
@@ -113,8 +113,8 @@ func generateAntecedentePaciente(dataChan chan<- SeederStruct) {
 
 		remain := data.MaxIdPaciente - i
 
-		if remain > constants.MAX_SAVES {
-			remain = constants.MAX_SAVES
+		if remain > constants.MaxSaves {
+			remain = constants.MaxSaves
 		}
 
 		for j := int64(0); j < remain; j++ {

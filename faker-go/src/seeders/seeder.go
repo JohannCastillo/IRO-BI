@@ -19,10 +19,11 @@ type SeederStruct struct {
 
 func Seed() {
 
-	NDoctores := flag.Int("d", 0, "Cantidad de doctores a crear")
+	NDoctors := flag.Int("d", 0, "Cantidad de doctores a crear")
 	SeedDefault := flag.Bool("def", false, "Crear antecedentes")
 	NPacientes := flag.Int("p", 0, "Cantidad de pacientes a crear")
 	NAtenciones := flag.Int("at", 0, "Crear Atencion")
+	NCapacitaciones := flag.Int("c", 0, "Cantidad de capacitaciones a crear")
 
 	flag.Parse()
 
@@ -60,11 +61,11 @@ func Seed() {
 	// 	go PacienteAntecedenteSeeder(&wg, pacienteAntecedenteBar)
 	// }
 
-	if *NDoctores > 0 {
+	if *NDoctors > 0 {
 		wg.Add(1)
-		doctorBar := utils.NewPB("Creando doctores ...", *NDoctores)
+		doctorBar := utils.NewPB("Creando doctores ...", *NDoctors)
 		pool.Add(doctorBar)
-		go DoctorSeeder(*NDoctores, &wg, doctorBar)
+		go DoctorSeeder(*NDoctors, &wg, doctorBar)
 	}
 
 	wg.Wait()
@@ -76,8 +77,19 @@ func Seed() {
 		go AtencionSeeder(*NAtenciones, &wg, atencionBar)
 	}
 
+	if *NCapacitaciones > 0 {
+		wg.Add(1)
+		capacitacionBar := utils.NewPB("Creando capacitaciones ...", *NCapacitaciones)
+		pool.Add(capacitacionBar)
+		go CapacitacionSeeder(*NCapacitaciones, &wg, capacitacionBar)
+	}
+
 	wg.Wait()
-	pool.Stop()
+	err = pool.Stop()
+
+	if err != nil {
+		log.Fatal(err)
+	}
 
 }
 
@@ -94,7 +106,6 @@ func Save(wg *sync.WaitGroup, dataChan <-chan SeederStruct, bar *pb.ProgressBar)
 			bar.Set("prefix", utils.GetPrefix("Error al crear datos :o"))
 			fmt.Println(err)
 			utils.LogError(err, data.Query)
-			bar.Err()
 			bar.Finish()
 			return
 		}
@@ -110,6 +121,7 @@ var defaultValues = []string{
 	"ANTECEDENTES",
 	"ENFERMEDADES",
 	"DATOS_BASICOS",
+	"INSTITUCION",
 }
 
 func seedDefault(bar *pb.ProgressBar) {

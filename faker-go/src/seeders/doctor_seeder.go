@@ -38,15 +38,15 @@ func DoctorSeeder(cantidad int, wgParent *sync.WaitGroup, bar *pb.ProgressBar) {
 }
 
 func generateDoctores(cantidad int, dataChan chan<- SeederStruct, bar *pb.ProgressBar) {
-	for i := 0; i < cantidad; i += constants.MAX_SAVES {
+	for i := 0; i < cantidad; i += constants.MaxSaves {
 		doctores := SeederStruct{}
 
-		doctores.Query = constants.INSERT_DOCTOR
+		doctores.Query = constants.InsertDoctor
 
 		remain := cantidad - i
 
-		if remain > constants.MAX_SAVES {
-			remain = constants.MAX_SAVES
+		if remain > constants.MaxSaves {
+			remain = constants.MaxSaves
 		}
 
 		for j := 0; j < remain; j++ {

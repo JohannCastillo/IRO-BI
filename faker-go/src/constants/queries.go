@@ -1,7 +1,7 @@
 package constants
 
 const (
-	INSERT_PACIENTE = `INSERT INTO PACIENTE (
+	InsertPaciente = `INSERT INTO PACIENTE (
 		NombresYApellidos, 
 		FechaDeNacimiento, 
 		DNI, 
@@ -15,13 +15,13 @@ const (
 		IdTipoPaciente, 
 		IdDistrito) VALUES `
 
-	INSERT_PACIENTE_ANTECEDENTE = `INSERT INTO PACIENTE_ANTECEDENTE (
+	InsertPacienteAntecedente = `INSERT INTO PACIENTE_ANTECEDENTE (
 		IdAntecedente,
 		IdPaciente,
 		Detalle,
 		FechaRegistro) VALUES `
 
-	INSERT_DOCTOR = `INSERT INTO DOCTOR (
+	InsertDoctor = `INSERT INTO DOCTOR (
 		Nombre, 
 		DNI, 
 		Telefono, 
@@ -30,7 +30,7 @@ const (
 		IdEspecialidad) 
 		VALUES `
 
-	INSERT_ATENCION = `INSERT INTO ATENCION (
+	InsertAtencion = `INSERT INTO ATENCION (
 		FechaHoraLlegada,
 		FechaHoraAtencion,
 		IdEstado,
@@ -41,7 +41,7 @@ const (
 		IdServicio,
 		IdPaciente) VALUES `
 
-	INSERT_CITA = `INSERT INTO CITA (
+	InsertCita = `INSERT INTO CITA (
 		Costo,
 		FechaHora,
 		Motivo,
@@ -49,9 +49,24 @@ const (
 		IdDoctor,
 		IdEstado) VALUES `
 
-	INSERT_REFERENCIA = `INSERT INTO REFERENCIA (
+	InsertReferencia = `INSERT INTO REFERENCIA (
 		DoctorExterno,
 		FechaHoraReferencia,
 		IdInstitucionExterna)
 		VALUES `
+
+	InsertCapacitacion = `INSERT INTO CAPACITACION (
+		Descripcion,
+		Costo,
+		Modalidad,
+		TotalSesiones,
+		IdInstitucion)
+		VALUES `
+
+	InsertAsistenciaCapacitacion = `INSERT INTO ASISTENCIA (
+        IdCapacitacion,
+		IdDoctor,
+		Sesion,
+        Fecha)
+    	VALUES `
 )

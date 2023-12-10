@@ -39,17 +39,17 @@ func generateAtencion(cantidad int, dataChan chan<- SeederStruct, bar *pb.Progre
 	maxCita := data.MaxIdCita + 1
 	maxReferencia := data.MaxIdReferencia + 1
 
-	for i := 0; i < cantidad; i += constants.MAX_SAVES {
+	for i := 0; i < cantidad; i += constants.MaxSaves {
 		// fmt.Println(i)
 		atenciones := SeederStruct{}
-		atencionesQuery := constants.INSERT_ATENCION
-		citaQuery := constants.INSERT_CITA
-		referenciaQuery := constants.INSERT_REFERENCIA
+		atencionesQuery := constants.InsertAtencion
+		citaQuery := constants.InsertCita
+		referenciaQuery := constants.InsertReferencia
 
 		remain := cantidad - i
 
-		if remain > constants.MAX_SAVES {
-			remain = constants.MAX_SAVES
+		if remain > constants.MaxSaves {
+			remain = constants.MaxSaves
 		}
 
 		for j := 0; j < remain; j++ {

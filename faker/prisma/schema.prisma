@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "sqlserver"
-  url      = "sqlserver://localhost:1433;database=IRO_PRUEBA;integratedSecurity=true;trustServerCertificate=true;"
+  url      = "sqlserver://localhost:1433;database=IRO_v2;integratedSecurity=true;trustServerCertificate=true;"
 }
 
 model DEPARTAMENTO {
