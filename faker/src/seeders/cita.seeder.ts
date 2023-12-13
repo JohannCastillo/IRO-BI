@@ -17,6 +17,7 @@ export class CitaSeeder {
       sentence += sql + '\n'
       // generate atención
       atenciones += AtencionSeeder.getSqlConsulta({ idCita: i })
+      console.log("Cita: " + i)
     }
 
     exportTo('sql', sentence, 'citas')

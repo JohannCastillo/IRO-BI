@@ -1,0 +1,10 @@
+INSERT INTO INSTITUCION (Nombre) VALUES ('Jackson LLC');
+INSERT INTO INSTITUCION (Nombre) VALUES ('Stark-Higgins');
+INSERT INTO INSTITUCION (Nombre) VALUES ('Smith, King and Watson');
+INSERT INTO INSTITUCION (Nombre) VALUES ('Ward Inc');
+INSERT INTO INSTITUCION (Nombre) VALUES ('Gonzales and Sons');
+INSERT INTO INSTITUCION (Nombre) VALUES ('Gonzalez-Brooks');
+INSERT INTO INSTITUCION (Nombre) VALUES ('Sweeney-Lester');
+INSERT INTO INSTITUCION (Nombre) VALUES ('Spence and Sons');
+INSERT INTO INSTITUCION (Nombre) VALUES ('Butler-Wolf');
+INSERT INTO INSTITUCION (Nombre) VALUES ('Montgomery, Torres and Williams');

@@ -1,36 +1,19 @@
-DROP DATABASE IF EXISTS IRO4;
+DROP DATABASE IF EXISTS IRO5;
 GO
-CREATE DATABASE IRO4;
+CREATE DATABASE IRO5;
 GO
-USE IRO4;
+USE IRO5;
 GO
 
 
 
 CREATE TABLE ANTECEDENTE
 ( 
-	IdAntecedente        int IDENTITY ( 1,1 ) ,
+	IdAntecedente        int IDENTITY ( 1,1 ) PRIMARY KEY,
 	IdTipo               smallint  NULL ,
 	Antecedente          varchar(30)  NULL 
 )
 go
-
-
-
-CREATE UNIQUE CLUSTERED INDEX XPKANTECEDENTE ON ANTECEDENTE
-( 
-	IdAntecedente         ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1ANTECEDENTE ON ANTECEDENTE
-( 
-	IdTipo                ASC
-)
-go
-
 
 
 CREATE TABLE ASISTENCIA
@@ -42,40 +25,13 @@ CREATE TABLE ASISTENCIA
 )
 go
 
-
-
-CREATE UNIQUE CLUSTERED INDEX XPKASISTENCIA ON ASISTENCIA
-( 
-	IdDoctor              ASC,
-	IdCapacitacion        ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1ASISTENCIA ON ASISTENCIA
-( 
-	IdDoctor              ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF2ASISTENCIA ON ASISTENCIA
-( 
-	IdCapacitacion        ASC
-)
-go
-
-
-
 CREATE TABLE ATENCION
 ( 
+	IdAtencion           int IDENTITY ( 1,1 ) PRIMARY KEY,
 	IdEstado             tinyint  NULL ,
 	FechaHoraLlegada     datetime  NOT NULL ,
 	FechaHoraAtendida    datetime  NOT NULL ,
 	IdTipoAtencion       tinyint  NOT NULL ,
-	IdAtencion           int IDENTITY ( 1,1 ) ,
 	IdCita               int  NULL UNIQUE,
 	IdDoctor             int  NULL ,
 	IdReferencia         int  NULL ,
@@ -85,74 +41,9 @@ CREATE TABLE ATENCION
 go
 
 
-
-CREATE UNIQUE CLUSTERED INDEX XPKDETALLE_ATENCION ON ATENCION
-( 
-	IdAtencion            ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF3DETALLE_ATENCION ON ATENCION
-( 
-	IdEstado              ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF6DETALLE_ATENCION ON ATENCION
-( 
-	IdTipoAtencion        ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF8DETALLE_ATENCION ON ATENCION
-( 
-	IdServicio            ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF11DETALLE_ATENCION ON ATENCION
-( 
-	IdDoctor              ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF12DETALLE_ATENCION ON ATENCION
-( 
-	IdReferencia          ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF9DETALLE_ATENCION ON ATENCION
-( 
-	IdCita                ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF13DETALLE_ATENCION ON ATENCION
-( 
-	IdPaciente            ASC
-)
-go
-
-
-
 CREATE TABLE CAPACITACION
 ( 
-	IdCapacitacion       int IDENTITY ( 1,1 ) ,
+	IdCapacitacion       int IDENTITY ( 1,1 )  PRIMARY KEY,
 	Costo                money  NULL ,
 	Modalidad            varchar(20)  NULL ,
 	Descripcion          varchar(80)  NULL ,
@@ -163,26 +54,10 @@ go
 
 
 
-CREATE UNIQUE CLUSTERED INDEX XPKCAPACITACION ON CAPACITACION
-( 
-	IdCapacitacion        ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1CAPACITACION ON CAPACITACION
-( 
-	IdInstitucion         ASC
-)
-go
-
-
-
 CREATE TABLE CITA
 ( 
 	Costo                money  NULL ,
-	IdCita               int IDENTITY ( 1,1 ) ,
+	IdCita               int IDENTITY ( 1,1 )  PRIMARY KEY,
 	IdPaciente           bigint  NOT NULL ,
 	Fecha                datetime  NULL ,
 	Motivo               varchar(30)  NULL ,
@@ -192,51 +67,10 @@ CREATE TABLE CITA
 go
 
 
-
-CREATE UNIQUE CLUSTERED INDEX XPKCITA ON CITA
-( 
-	IdCita                ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1CITA ON CITA
-( 
-	IdPaciente            ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF2CITA ON CITA
-( 
-	IdDoctor              ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF3CITA ON CITA
-( 
-	IdCitaEstado          ASC
-)
-go
-
-
-
 CREATE TABLE CITA_ESTADO
 ( 
-	IdCitaEstado         smallint IDENTITY ( 1,1 ) ,
+	IdCitaEstado         smallint IDENTITY ( 1,1 )  PRIMARY KEY,
 	Estado               varchar(15)  NULL 
-)
-go
-
-
-
-CREATE UNIQUE CLUSTERED INDEX XPKEstado ON CITA_ESTADO
-( 
-	IdCitaEstado          ASC
 )
 go
 
@@ -244,7 +78,7 @@ go
 
 CREATE TABLE CONTACTO_EMERGENCIA
 ( 
-	idContactoEmergencia bigint IDENTITY ( 1,1 ) ,
+	idContactoEmergencia bigint IDENTITY ( 1,1 )  PRIMARY KEY,
 	Nombre               varchar(25)  NULL ,
 	Apellidos            varchar(25)  NULL ,
 	Celular              char(9)  NULL ,
@@ -255,29 +89,12 @@ go
 
 
 
-CREATE UNIQUE CLUSTERED INDEX XPKCONTACTO_EMERGENCIA ON CONTACTO_EMERGENCIA
-( 
-	idContactoEmergencia  ASC
-)
-go
-
-
-
 CREATE TABLE DEPARTAMENTO
 ( 
-	IdDepartamento       int IDENTITY ( 1,1 ) ,
+	IdDepartamento       int IDENTITY ( 1,1 )  PRIMARY KEY,
 	Departamento         varchar(30)  NULL 
 )
 go
-
-
-
-CREATE UNIQUE CLUSTERED INDEX XPKDEPARTAMENTO ON DEPARTAMENTO
-( 
-	IdDepartamento        ASC
-)
-go
-
 
 
 CREATE TABLE DIAGNOSTICO
@@ -295,7 +112,7 @@ CREATE TABLE DIAGNOSTICO
 	CercaOIEsf           float  NULL ,
 	CercaOICil           float  NULL ,
 	CercaOIEje           float  NULL ,
-	IdAtencion           int IDENTITY ( 1,1 ) ,
+	IdAtencion           int IDENTITY ( 1,1 )  PRIMARY KEY,
 	AgudezaVisual        float  NULL ,
 	Tonometria           float  NULL ,
 	Refraccion           float  NULL ,
@@ -309,51 +126,18 @@ go
 
 
 
-CREATE UNIQUE CLUSTERED INDEX XPKDIAGNOSTICO ON DIAGNOSTICO
-( 
-	IdAtencion            ASC
-)
-go
-
-
-
-CREATE UNIQUE NONCLUSTERED INDEX XIF1DIAGNOSTICO ON DIAGNOSTICO
-( 
-	IdAtencion            ASC
-)
-go
-
-
-
 CREATE TABLE DISTRITO
 ( 
-	IdDistrito           int IDENTITY ( 1,1 ) ,
+	IdDistrito           int IDENTITY ( 1,1 )  PRIMARY KEY,
 	Distrito             varchar(36)  NOT NULL ,
 	IdProvincia          int  NULL 
 )
 go
 
 
-
-CREATE UNIQUE CLUSTERED INDEX XPKDISTRITO ON DISTRITO
-( 
-	IdDistrito            ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1DISTRITO ON DISTRITO
-( 
-	IdProvincia           ASC
-)
-go
-
-
-
 CREATE TABLE DOCTOR
 ( 
-	IdDoctor             int IDENTITY ( 1,1 ) ,
+	IdDoctor             int IDENTITY ( 1,1 ) PRIMARY KEY,
 	IdEspecialidad       tinyint  NOT NULL ,
 	Nombre               varchar(50)  NOT NULL ,
 	Telefono             char(9)  NULL ,
@@ -364,40 +148,14 @@ CREATE TABLE DOCTOR
 go
 
 
-
-CREATE UNIQUE CLUSTERED INDEX XPKDOCTOR ON DOCTOR
-( 
-	IdDoctor              ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1DOCTOR ON DOCTOR
-( 
-	IdEspecialidad        ASC
-)
-go
-
-
-
 CREATE TABLE ENFERMEDAD
 ( 
-	idEnfermedad         int IDENTITY ( 1,1 ) ,
+	idEnfermedad         int IDENTITY ( 1,1 )  PRIMARY KEY,
 	nombre               varchar(20)  NULL ,
 	descripcion          varchar(40)  NULL ,
 	sintomas             varchar(50)  NULL 
 )
 go
-
-
-
-CREATE UNIQUE CLUSTERED INDEX XPKENFERMEDAD ON ENFERMEDAD
-( 
-	idEnfermedad          ASC
-)
-go
-
 
 
 CREATE TABLE ENFERMEDAD_DIAGNOSTICADA
@@ -412,59 +170,10 @@ go
 
 
 
-CREATE UNIQUE CLUSTERED INDEX XPKENFERMEDAD_DIAGNOSTICADA ON ENFERMEDAD_DIAGNOSTICADA
-( 
-	IdPaciente            ASC,
-	idEnfermedad          ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1ENFERMEDAD_DIAGNOSTICADA ON ENFERMEDAD_DIAGNOSTICADA
-( 
-	IdPaciente            ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF2ENFERMEDAD_DIAGNOSTICADA ON ENFERMEDAD_DIAGNOSTICADA
-( 
-	IdDoctor              ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF3ENFERMEDAD_DIAGNOSTICADA ON ENFERMEDAD_DIAGNOSTICADA
-( 
-	idEnfermedad          ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF4ENFERMEDAD_DIAGNOSTICADA ON ENFERMEDAD_DIAGNOSTICADA
-( 
-	IdAtencion            ASC
-)
-go
-
-
-
 CREATE TABLE ESPECIALIDAD
 ( 
-	IdEspecialidad       tinyint IDENTITY ( 1,1 ) ,
+	IdEspecialidad       tinyint IDENTITY ( 1,1 )  PRIMARY KEY,
 	Especialidad         varchar(30)  NOT NULL 
-)
-go
-
-
-
-CREATE UNIQUE CLUSTERED INDEX XPKESPECIALIDAD ON ESPECIALIDAD
-( 
-	IdEspecialidad        ASC
 )
 go
 
@@ -472,16 +181,8 @@ go
 
 CREATE TABLE ESTADO_ATENCION
 ( 
-	IdEstado             tinyint IDENTITY ( 1,1 ) ,
+	IdEstado             tinyint IDENTITY ( 1,1 )  PRIMARY KEY,
 	Estado               varchar(40)  NOT NULL 
-)
-go
-
-
-
-CREATE UNIQUE CLUSTERED INDEX XPKESTADO ON ESTADO_ATENCION
-( 
-	IdEstado              ASC
 )
 go
 
@@ -489,41 +190,25 @@ go
 
 CREATE TABLE INSTITUCION
 ( 
-	IdInstitucion        smallint IDENTITY ( 1,1 ) ,
+	IdInstitucion        smallint IDENTITY ( 1,1 )  PRIMARY KEY,
 	Nombre               varchar(50)  NULL 
 )
 go
 
 
 
-CREATE UNIQUE CLUSTERED INDEX XPKINSTITUCION ON INSTITUCION
-( 
-	IdInstitucion         ASC
-)
-go
-
-
 
 CREATE TABLE INSTITUCION_EXTERNA
 ( 
-	IdInstitucionExterno int IDENTITY ( 1,1 ) ,
+	IdInstitucionExterno int IDENTITY ( 1,1 )  PRIMARY KEY,
 	Institucion          varchar(40)  NOT NULL 
 )
 go
 
 
-
-CREATE UNIQUE CLUSTERED INDEX XPKEXTERNOS ON INSTITUCION_EXTERNA
-( 
-	IdInstitucionExterno  ASC
-)
-go
-
-
-
 CREATE TABLE PACIENTE
 ( 
-	IdPaciente           bigint IDENTITY ( 1,1 ) ,
+	IdPaciente           bigint IDENTITY ( 1,1 )  PRIMARY KEY,
 	IdTipoPaciente       tinyint  NOT NULL ,
 	IdDistrito           int  NOT NULL ,
 	FechaDeNacimiento    date  NOT NULL ,
@@ -542,38 +227,6 @@ go
 
 
 
-CREATE UNIQUE CLUSTERED INDEX XPKPACIENTE ON PACIENTE
-( 
-	IdPaciente            ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1PACIENTE ON PACIENTE
-( 
-	IdTipoPaciente        ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF3PACIENTE ON PACIENTE
-( 
-	IdDistrito            ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF4PACIENTE ON PACIENTE
-( 
-	idContactoEmergencia  ASC
-)
-go
-
-
-
 CREATE TABLE PACIENTE_ANTECEDENTE
 ( 
 	Detalle              varchar(50)  NULL ,
@@ -585,60 +238,18 @@ go
 
 
 
-CREATE UNIQUE CLUSTERED INDEX XPKPACIENTE_ANTECEDENTE ON PACIENTE_ANTECEDENTE
-( 
-	IdAntecedente         ASC,
-	IdPaciente            ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1PACIENTE_ANTECEDENTE ON PACIENTE_ANTECEDENTE
-( 
-	IdAntecedente         ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF2PACIENTE_ANTECEDENTE ON PACIENTE_ANTECEDENTE
-( 
-	IdPaciente            ASC
-)
-go
-
-
-
 CREATE TABLE PROVINCIA
 ( 
-	IdProvincia          int IDENTITY ( 1,1 ) ,
+	IdProvincia          int IDENTITY ( 1,1 )  PRIMARY KEY,
 	Provincia            varchar(30)  NOT NULL ,
 	IdDepartamento       int  NULL 
 )
 go
 
 
-
-CREATE UNIQUE CLUSTERED INDEX XPKPROVINCIA ON PROVINCIA
-( 
-	IdProvincia           ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1PROVINCIA ON PROVINCIA
-( 
-	IdDepartamento        ASC
-)
-go
-
-
-
 CREATE TABLE REFERENCIA
 ( 
-	IdReferencia         int IDENTITY ( 1,1 ) ,
+	IdReferencia         int IDENTITY ( 1,1 )  PRIMARY KEY,
 	DoctorExterno        varchar(50)  NOT NULL ,
 	FechaHoraReferencia  datetime  NOT NULL ,
 	IdInstitucionExterno int  NULL 
@@ -646,26 +257,9 @@ CREATE TABLE REFERENCIA
 go
 
 
-
-CREATE UNIQUE CLUSTERED INDEX XPKREFERENCIA ON REFERENCIA
-( 
-	IdReferencia          ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1REFERENCIA ON REFERENCIA
-( 
-	IdInstitucionExterno  ASC
-)
-go
-
-
-
 CREATE TABLE SERVICIO
 ( 
-	IdServicio           tinyint IDENTITY ( 1,1 ) ,
+	IdServicio           tinyint IDENTITY ( 1,1 )  PRIMARY KEY,
 	IdTipoServicio       tinyint  NULL ,
 	CostoActual          money  NOT NULL ,
 	Descripcion          varchar(40)  NOT NULL 
@@ -673,52 +267,18 @@ CREATE TABLE SERVICIO
 go
 
 
-
-CREATE UNIQUE CLUSTERED INDEX XPKSERVICIO ON SERVICIO
-( 
-	IdServicio            ASC
-)
-go
-
-
-
-CREATE NONCLUSTERED INDEX XIF1SERVICIO ON SERVICIO
-( 
-	IdTipoServicio        ASC
-)
-go
-
-
-
 CREATE TABLE TIPO_ANTECEDENTE
 ( 
-	IdTipo               smallint IDENTITY ( 1,1 ) ,
+	IdTipo               smallint IDENTITY ( 1,1 )  PRIMARY KEY,
 	Tipo                 varchar(25)  NULL 
 )
 go
 
 
-
-CREATE UNIQUE CLUSTERED INDEX XPKTIPO_ANTECEDENTE ON TIPO_ANTECEDENTE
-( 
-	IdTipo                ASC
-)
-go
-
-
-
 CREATE TABLE TIPO_ATENCION
 ( 
-	IdTipoAtencion       tinyint IDENTITY ( 1,1 ) ,
+	IdTipoAtencion       tinyint IDENTITY ( 1,1 )  PRIMARY KEY,
 	TipoAtencion         varchar(30)  NULL 
-)
-go
-
-
-
-CREATE UNIQUE CLUSTERED INDEX XPKTIPO_ATENCION ON TIPO_ATENCION
-( 
-	IdTipoAtencion        ASC
 )
 go
 
@@ -726,16 +286,8 @@ go
 
 CREATE TABLE TIPO_PACIENTE
 ( 
-	IdTipoPaciente       tinyint IDENTITY ( 1,1 ) ,
+	IdTipoPaciente       tinyint IDENTITY ( 1,1 )  PRIMARY KEY,
 	TipoPaciente         varchar(30)  NOT NULL 
-)
-go
-
-
-
-CREATE UNIQUE CLUSTERED INDEX XPKTIPO_PACIENTE ON TIPO_PACIENTE
-( 
-	IdTipoPaciente        ASC
 )
 go
 
@@ -743,19 +295,10 @@ go
 
 CREATE TABLE TIPO_SERVICIO
 ( 
-	IdTipoServicio       tinyint IDENTITY ( 1,1 ) ,
+	IdTipoServicio       tinyint IDENTITY ( 1,1 )  PRIMARY KEY,
 	TipoServicio         varchar(30)  NOT NULL 
 )
 go
-
-
-
-CREATE UNIQUE CLUSTERED INDEX XPKTIPO_SERVICIO ON TIPO_SERVICIO
-( 
-	IdTipoServicio        ASC
-)
-go
-
 
 
 

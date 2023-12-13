@@ -22,7 +22,7 @@ export function formatSqlOne(tableName: string, data: any) {
     const sql = `INSERT INTO ${tableName} (${keys.join(",")}) VALUES (${values
         .map((item) => `${item ? `'${removeApostrophe(item)}'` : null}`) //avoid the ' character in item
         .join(",")}) \nGO`;
-    console.log(sql);
+    // console.log(sql);
     return sql;
 }
 

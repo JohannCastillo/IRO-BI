@@ -1,0 +1,362 @@
+BEGIN TRY
+
+BEGIN TRAN;
+
+-- CreateTable
+CREATE TABLE [dbo].[DEPARTAMENTO] (
+    [IdDepartamento] SMALLINT NOT NULL IDENTITY(1,1),
+    [Departamento] VARCHAR(100) NOT NULL,
+    CONSTRAINT [DEPARTAMENTO_pkey] PRIMARY KEY CLUSTERED ([IdDepartamento])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[PROVINCIA] (
+    [IdProvincia] INT NOT NULL IDENTITY(1,1),
+    [IdDepartamento] SMALLINT NOT NULL,
+    [Provincia] VARCHAR(100) NOT NULL,
+    CONSTRAINT [PROVINCIA_pkey] PRIMARY KEY CLUSTERED ([IdProvincia])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[DISTRITO] (
+    [IdDistrito] INT NOT NULL IDENTITY(1,1),
+    [IdProvincia] INT NOT NULL,
+    [Distrito] VARCHAR(100) NOT NULL,
+    CONSTRAINT [DISTRITO_pkey] PRIMARY KEY CLUSTERED ([IdDistrito])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[TIPO_ANTECEDENTE] (
+    [IdTipo] SMALLINT NOT NULL IDENTITY(1,1),
+    [Tipo] VARCHAR(50) NOT NULL,
+    CONSTRAINT [TIPO_ANTECEDENTE_pkey] PRIMARY KEY CLUSTERED ([IdTipo])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[ANTECEDENTE] (
+    [IdAntecedente] INT NOT NULL IDENTITY(1,1),
+    [IdTipoAntecedente] SMALLINT NOT NULL,
+    [Antecedente] VARCHAR(100) NOT NULL,
+    CONSTRAINT [ANTECEDENTE_pkey] PRIMARY KEY CLUSTERED ([IdAntecedente])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[TIPO_PACIENTE] (
+    [IdTipoPaciente] SMALLINT NOT NULL IDENTITY(1,1),
+    [TipoPaciente] VARCHAR(50) NOT NULL,
+    CONSTRAINT [TIPO_PACIENTE_pkey] PRIMARY KEY CLUSTERED ([IdTipoPaciente])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[CONTACTO_EMERGENCIA] (
+    [IdContacto] INT NOT NULL IDENTITY(1,1),
+    [Nombre] VARCHAR(255) NOT NULL,
+    [Apellido] VARCHAR(255) NOT NULL,
+    [Celular] VARCHAR(9),
+    [Correo] VARCHAR(255),
+    [Relacion] VARCHAR(100),
+    [IdPaciente] INT NOT NULL,
+    CONSTRAINT [CONTACTO_EMERGENCIA_pkey] PRIMARY KEY CLUSTERED ([IdContacto]),
+    CONSTRAINT [CONTACTO_EMERGENCIA_IdPaciente_key] UNIQUE NONCLUSTERED ([IdPaciente])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[PACIENTE] (
+    [IdPaciente] INT NOT NULL IDENTITY(1,1),
+    [NombresYApellidos] VARCHAR(512) NOT NULL,
+    [FechaDeNacimiento] DATETIME NOT NULL,
+    [DNI] VARCHAR(8) NOT NULL,
+    [Sexo] CHAR(1) NOT NULL,
+    [Celular] VARCHAR(9) NOT NULL,
+    [Correo] VARCHAR(255) NOT NULL,
+    [Observaciones] TEXT NOT NULL,
+    [Domicilio] TEXT NOT NULL,
+    [TipoSangre] VARCHAR(3) NOT NULL,
+    [EstadoCivil] VARCHAR(50) NOT NULL,
+    [IdTipoPaciente] SMALLINT NOT NULL,
+    [IdDistrito] INT NOT NULL,
+    CONSTRAINT [PACIENTE_pkey] PRIMARY KEY CLUSTERED ([IdPaciente])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[PACIENTE_ANTECEDENTE] (
+    [IdAntecedente] INT NOT NULL,
+    [IdPaciente] INT NOT NULL,
+    [Detalle] TEXT NOT NULL,
+    [FechaRegistro] DATETIME NOT NULL,
+    CONSTRAINT [PACIENTE_ANTECEDENTE_pkey] PRIMARY KEY CLUSTERED ([IdAntecedente],[IdPaciente])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[INSTITUCION] (
+    [IdInstitucion] INT NOT NULL IDENTITY(1,1),
+    [Nombre] VARCHAR(255) NOT NULL,
+    CONSTRAINT [INSTITUCION_pkey] PRIMARY KEY CLUSTERED ([IdInstitucion])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[CAPACITACION] (
+    [IdCapacitacion] INT NOT NULL IDENTITY(1,1),
+    [Descripcion] VARCHAR(255) NOT NULL,
+    [Costo] MONEY NOT NULL,
+    [Modalidad] VARCHAR(255) NOT NULL,
+    [TotalSesiones] SMALLINT NOT NULL,
+    [IdInstitucion] INT NOT NULL,
+    CONSTRAINT [CAPACITACION_pkey] PRIMARY KEY CLUSTERED ([IdCapacitacion])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[ESPECIALIDAD] (
+    [IdEspecialidad] INT NOT NULL IDENTITY(1,1),
+    [Especialidad] VARCHAR(255) NOT NULL,
+    CONSTRAINT [ESPECIALIDAD_pkey] PRIMARY KEY CLUSTERED ([IdEspecialidad])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[DOCTOR] (
+    [IdDoctor] INT NOT NULL IDENTITY(1,1),
+    [Nombre] VARCHAR(512) NOT NULL,
+    [DNI] VARCHAR(8) NOT NULL,
+    [Telefono] VARCHAR(9) NOT NULL,
+    [Correo] VARCHAR(255) NOT NULL,
+    [Estado] VARCHAR(50) NOT NULL,
+    [IdEspecialidad] INT NOT NULL,
+    CONSTRAINT [DOCTOR_pkey] PRIMARY KEY CLUSTERED ([IdDoctor])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[ASISTENCIA] (
+    [IdDoctor] INT NOT NULL,
+    [IdCapacitacion] INT NOT NULL,
+    [Sesion] SMALLINT NOT NULL,
+    [Fecha] DATETIME NOT NULL,
+    CONSTRAINT [ASISTENCIA_pkey] PRIMARY KEY CLUSTERED ([IdDoctor],[IdCapacitacion],[Sesion])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[ESTADO_ATENCION] (
+    [IdEstado] SMALLINT NOT NULL IDENTITY(1,1),
+    [Estado] VARCHAR(100) NOT NULL,
+    CONSTRAINT [ESTADO_ATENCION_pkey] PRIMARY KEY CLUSTERED ([IdEstado])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[TIPO_ATENCION] (
+    [IdTipoAtencion] SMALLINT NOT NULL IDENTITY(1,1),
+    [TipoAtencion] VARCHAR(100) NOT NULL,
+    CONSTRAINT [TIPO_ATENCION_pkey] PRIMARY KEY CLUSTERED ([IdTipoAtencion])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[CITA_ESTADO] (
+    [IdEstado] SMALLINT NOT NULL IDENTITY(1,1),
+    [Estado] VARCHAR(100) NOT NULL,
+    CONSTRAINT [CITA_ESTADO_pkey] PRIMARY KEY CLUSTERED ([IdEstado])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[CITA] (
+    [IdCita] INT NOT NULL IDENTITY(1,1),
+    [Costo] MONEY NOT NULL,
+    [FechaHora] DATETIME NOT NULL,
+    [Motivo] TEXT NOT NULL,
+    [IdPaciente] INT NOT NULL,
+    [IdDoctor] INT NOT NULL,
+    [IdEstado] SMALLINT NOT NULL,
+    CONSTRAINT [CITA_pkey] PRIMARY KEY CLUSTERED ([IdCita])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[INSTITUCION_EXTERNA] (
+    [IdInstitucionExterna] INT NOT NULL IDENTITY(1,1),
+    [Institucion] TEXT NOT NULL,
+    CONSTRAINT [INSTITUCION_EXTERNA_pkey] PRIMARY KEY CLUSTERED ([IdInstitucionExterna])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[REFERENCIA] (
+    [IdReferencia] INT NOT NULL IDENTITY(1,1),
+    [DoctorExterno] TEXT NOT NULL,
+    [FechaHoraReferencia] DATETIME NOT NULL,
+    [IdInstitucionExterna] INT NOT NULL,
+    CONSTRAINT [REFERENCIA_pkey] PRIMARY KEY CLUSTERED ([IdReferencia])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[TIPO_SERVICIO] (
+    [IdTipoServicio] SMALLINT NOT NULL IDENTITY(1,1),
+    [TipoServicio] VARCHAR(100) NOT NULL,
+    CONSTRAINT [TIPO_SERVICIO_pkey] PRIMARY KEY CLUSTERED ([IdTipoServicio])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[SERVICIO] (
+    [IdServicio] INT NOT NULL IDENTITY(1,1),
+    [Descripcion] TEXT NOT NULL,
+    [Costo] MONEY NOT NULL,
+    [IdTipoServicio] SMALLINT NOT NULL,
+    CONSTRAINT [SERVICIO_pkey] PRIMARY KEY CLUSTERED ([IdServicio])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[ATENCION] (
+    [IdAtencion] INT NOT NULL IDENTITY(1,1),
+    [FechaHoraLlegada] DATETIME NOT NULL,
+    [FechaHoraAtencion] DATETIME NOT NULL,
+    [IdEstado] SMALLINT NOT NULL,
+    [IdTipoAtencion] SMALLINT NOT NULL,
+    [IdDoctor] INT NOT NULL,
+    [IdCita] INT,
+    [IdReferencia] INT,
+    [IdServicio] INT NOT NULL,
+    [IdPaciente] INT NOT NULL,
+    CONSTRAINT [ATENCION_pkey] PRIMARY KEY CLUSTERED ([IdAtencion])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[DIAGNOSTICO] (
+    [IdAtencion] INT NOT NULL,
+    [Observaciones] TEXT NOT NULL,
+    [LejosODEsf] FLOAT NOT NULL,
+    [LejosODCil] FLOAT NOT NULL,
+    [LejosODEje] FLOAT NOT NULL,
+    [LejosOIEsf] FLOAT NOT NULL,
+    [LejosOICil] FLOAT NOT NULL,
+    [LejosOIEje] FLOAT NOT NULL,
+    [CercaODEsf] FLOAT NOT NULL,
+    [CercaODCil] FLOAT NOT NULL,
+    [CercaODEje] FLOAT NOT NULL,
+    [CercaOIEsf] FLOAT NOT NULL,
+    [CercaOICil] FLOAT NOT NULL,
+    [CercaOIEje] FLOAT NOT NULL,
+    [AgudezaVisual] FLOAT NOT NULL,
+    [Tonometria] FLOAT NOT NULL,
+    [Refraccion] FLOAT NOT NULL,
+    [Campimetria] FLOAT NOT NULL,
+    [CurvaturaCorneal] FLOAT NOT NULL,
+    [MedicionLagrima] FLOAT NOT NULL,
+    [Paquimetria] FLOAT NOT NULL,
+    [OCT] FLOAT NOT NULL,
+    CONSTRAINT [DIAGNOSTICO_pkey] PRIMARY KEY CLUSTERED ([IdAtencion]),
+    CONSTRAINT [DIAGNOSTICO_IdAtencion_key] UNIQUE NONCLUSTERED ([IdAtencion])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[ENFERMEDAD_DIAGNOSTICADA] (
+    [IdEnfermedadDiagnostico] INT NOT NULL IDENTITY(1,1),
+    [IdPaciente] INT NOT NULL,
+    [IdEnfermedad] INT NOT NULL,
+    [IdDoctor] INT NOT NULL,
+    [FechaDiagnostico] DATETIME NOT NULL,
+    [IdAtencion] INT NOT NULL,
+    CONSTRAINT [ENFERMEDAD_DIAGNOSTICADA_pkey] PRIMARY KEY CLUSTERED ([IdEnfermedadDiagnostico],[IdPaciente],[IdEnfermedad],[IdDoctor])
+);
+
+-- CreateTable
+CREATE TABLE [dbo].[ENFERMEDAD] (
+    [IdEnfermedad] INT NOT NULL IDENTITY(1,1),
+    [Nombre] VARCHAR(255) NOT NULL,
+    [Descripcion] TEXT NOT NULL,
+    [Sintomas] TEXT NOT NULL,
+    CONSTRAINT [ENFERMEDAD_pkey] PRIMARY KEY CLUSTERED ([IdEnfermedad])
+);
+
+-- AddForeignKey
+ALTER TABLE [dbo].[PROVINCIA] ADD CONSTRAINT [PROVINCIA_IdDepartamento_fkey] FOREIGN KEY ([IdDepartamento]) REFERENCES [dbo].[DEPARTAMENTO]([IdDepartamento]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[DISTRITO] ADD CONSTRAINT [DISTRITO_IdProvincia_fkey] FOREIGN KEY ([IdProvincia]) REFERENCES [dbo].[PROVINCIA]([IdProvincia]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ANTECEDENTE] ADD CONSTRAINT [ANTECEDENTE_IdTipoAntecedente_fkey] FOREIGN KEY ([IdTipoAntecedente]) REFERENCES [dbo].[TIPO_ANTECEDENTE]([IdTipo]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[CONTACTO_EMERGENCIA] ADD CONSTRAINT [CONTACTO_EMERGENCIA_IdPaciente_fkey] FOREIGN KEY ([IdPaciente]) REFERENCES [dbo].[PACIENTE]([IdPaciente]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[PACIENTE] ADD CONSTRAINT [PACIENTE_IdTipoPaciente_fkey] FOREIGN KEY ([IdTipoPaciente]) REFERENCES [dbo].[TIPO_PACIENTE]([IdTipoPaciente]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[PACIENTE] ADD CONSTRAINT [PACIENTE_IdDistrito_fkey] FOREIGN KEY ([IdDistrito]) REFERENCES [dbo].[DISTRITO]([IdDistrito]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[PACIENTE_ANTECEDENTE] ADD CONSTRAINT [PACIENTE_ANTECEDENTE_IdAntecedente_fkey] FOREIGN KEY ([IdAntecedente]) REFERENCES [dbo].[ANTECEDENTE]([IdAntecedente]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[PACIENTE_ANTECEDENTE] ADD CONSTRAINT [PACIENTE_ANTECEDENTE_IdPaciente_fkey] FOREIGN KEY ([IdPaciente]) REFERENCES [dbo].[PACIENTE]([IdPaciente]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[CAPACITACION] ADD CONSTRAINT [CAPACITACION_IdInstitucion_fkey] FOREIGN KEY ([IdInstitucion]) REFERENCES [dbo].[INSTITUCION]([IdInstitucion]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[DOCTOR] ADD CONSTRAINT [DOCTOR_IdEspecialidad_fkey] FOREIGN KEY ([IdEspecialidad]) REFERENCES [dbo].[ESPECIALIDAD]([IdEspecialidad]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ASISTENCIA] ADD CONSTRAINT [ASISTENCIA_IdDoctor_fkey] FOREIGN KEY ([IdDoctor]) REFERENCES [dbo].[DOCTOR]([IdDoctor]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ASISTENCIA] ADD CONSTRAINT [ASISTENCIA_IdCapacitacion_fkey] FOREIGN KEY ([IdCapacitacion]) REFERENCES [dbo].[CAPACITACION]([IdCapacitacion]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[CITA] ADD CONSTRAINT [CITA_IdPaciente_fkey] FOREIGN KEY ([IdPaciente]) REFERENCES [dbo].[PACIENTE]([IdPaciente]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[CITA] ADD CONSTRAINT [CITA_IdDoctor_fkey] FOREIGN KEY ([IdDoctor]) REFERENCES [dbo].[DOCTOR]([IdDoctor]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[CITA] ADD CONSTRAINT [CITA_IdEstado_fkey] FOREIGN KEY ([IdEstado]) REFERENCES [dbo].[CITA_ESTADO]([IdEstado]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[REFERENCIA] ADD CONSTRAINT [REFERENCIA_IdInstitucionExterna_fkey] FOREIGN KEY ([IdInstitucionExterna]) REFERENCES [dbo].[INSTITUCION_EXTERNA]([IdInstitucionExterna]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[SERVICIO] ADD CONSTRAINT [SERVICIO_IdTipoServicio_fkey] FOREIGN KEY ([IdTipoServicio]) REFERENCES [dbo].[TIPO_SERVICIO]([IdTipoServicio]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ATENCION] ADD CONSTRAINT [ATENCION_IdEstado_fkey] FOREIGN KEY ([IdEstado]) REFERENCES [dbo].[ESTADO_ATENCION]([IdEstado]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ATENCION] ADD CONSTRAINT [ATENCION_IdTipoAtencion_fkey] FOREIGN KEY ([IdTipoAtencion]) REFERENCES [dbo].[TIPO_ATENCION]([IdTipoAtencion]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ATENCION] ADD CONSTRAINT [ATENCION_IdDoctor_fkey] FOREIGN KEY ([IdDoctor]) REFERENCES [dbo].[DOCTOR]([IdDoctor]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ATENCION] ADD CONSTRAINT [ATENCION_IdCita_fkey] FOREIGN KEY ([IdCita]) REFERENCES [dbo].[CITA]([IdCita]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ATENCION] ADD CONSTRAINT [ATENCION_IdReferencia_fkey] FOREIGN KEY ([IdReferencia]) REFERENCES [dbo].[REFERENCIA]([IdReferencia]) ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ATENCION] ADD CONSTRAINT [ATENCION_IdServicio_fkey] FOREIGN KEY ([IdServicio]) REFERENCES [dbo].[SERVICIO]([IdServicio]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ATENCION] ADD CONSTRAINT [ATENCION_IdPaciente_fkey] FOREIGN KEY ([IdPaciente]) REFERENCES [dbo].[PACIENTE]([IdPaciente]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[DIAGNOSTICO] ADD CONSTRAINT [DIAGNOSTICO_IdAtencion_fkey] FOREIGN KEY ([IdAtencion]) REFERENCES [dbo].[ATENCION]([IdAtencion]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ENFERMEDAD_DIAGNOSTICADA] ADD CONSTRAINT [ENFERMEDAD_DIAGNOSTICADA_IdAtencion_fkey] FOREIGN KEY ([IdAtencion]) REFERENCES [dbo].[DIAGNOSTICO]([IdAtencion]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ENFERMEDAD_DIAGNOSTICADA] ADD CONSTRAINT [ENFERMEDAD_DIAGNOSTICADA_IdPaciente_fkey] FOREIGN KEY ([IdPaciente]) REFERENCES [dbo].[PACIENTE]([IdPaciente]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ENFERMEDAD_DIAGNOSTICADA] ADD CONSTRAINT [ENFERMEDAD_DIAGNOSTICADA_IdEnfermedad_fkey] FOREIGN KEY ([IdEnfermedad]) REFERENCES [dbo].[ENFERMEDAD]([IdEnfermedad]) ON DELETE NO ACTION ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE [dbo].[ENFERMEDAD_DIAGNOSTICADA] ADD CONSTRAINT [ENFERMEDAD_DIAGNOSTICADA_IdDoctor_fkey] FOREIGN KEY ([IdDoctor]) REFERENCES [dbo].[DOCTOR]([IdDoctor]) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+COMMIT TRAN;
+
+END TRY
+BEGIN CATCH
+
+IF @@TRANCOUNT > 0
+BEGIN
+    ROLLBACK TRAN;
+END;
+THROW
+
+END CATCH

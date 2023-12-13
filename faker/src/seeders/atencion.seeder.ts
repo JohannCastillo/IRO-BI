@@ -23,6 +23,7 @@ export class AtencionSeeder {
       }
       
       const sql = formatSqlOne('ATENCION', atencion)
+      console.log("Atencion: " + i)
       
       sentence += sql + '\n'
     }
