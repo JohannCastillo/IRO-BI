@@ -1,5 +1,14 @@
 # IRO
 
+Proyecto de Inteligencia de Negocios aplicado al Instituto Regional de Oftalmología en Trujillo, Perú, 2024.
+
+## Arquitectura de la solución
+![image](https://github.com/user-attachments/assets/dde852b4-4436-431e-be66-b785b0a94090)
+
+## Arquitectura de la integración de modelo de IA ChatGPT utilizando PowerApps y Power Automate
+![image](https://github.com/user-attachments/assets/1ee73070-2676-4919-9693-964a21005e27)
+
+
 ## Tabla "Diagnóstico"
 
 * Agudeza Visual:
@@ -17,3 +26,4 @@
 * Tomografía de Coherencia Óptica (OCT):
 
     Ejemplo: Espesor de la capa de fibras nerviosas de la retina: 90 micrómetros. La OCT proporciona mediciones detalladas de la retina y el nervio óptico.
+
